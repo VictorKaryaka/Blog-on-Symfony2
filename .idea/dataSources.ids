@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - blogger@localhost" uuid="6ff304d7-8585-4a2e-a505-ebc31eab7770">
+    <database-info product="MySQL" version="5.5.46-0ubuntu0.14.04.2" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact"/>
+    <schema name="" catalog="blogger"/>
+    <table name="acl_classes" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="class_type" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_46C8B806EA000B10" table="acl_entries" schema="" catalog="blogger" columns="class_id"/>
+      <index name="UNIQ_69DD750638A36066" unique="true" columns="class_type"/>
+    </table>
+    <table name="acl_entries" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="class_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="object_identity_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="security_identity_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="field_name" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="ace_order" sqlType="SMALLINT UNSIGNED" precision="5" scale="0" nullable="false" jdbcType="5"/>
+      <column name="mask" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="granting" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="granting_strategy" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="audit_success" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="audit_failure" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_46C8B8063D9AB4A6" columns="object_identity_id" ref-table="acl_object_identities" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <foreign-key name="FK_46C8B806DF9183C9" columns="security_identity_id" ref-table="acl_security_identities" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <foreign-key name="FK_46C8B806EA000B10" columns="class_id" ref-table="acl_classes" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <index name="UNIQ_46C8B806EA000B103D9AB4A64DEF17BCE4289BF4" unique="true" columns="class_id,object_identity_id,field_name,ace_order"/>
+      <index name="IDX_46C8B8063D9AB4A6" unique="false" columns="object_identity_id"/>
+      <index name="IDX_46C8B806DF9183C9" unique="false" columns="security_identity_id"/>
+      <index name="IDX_46C8B806EA000B10" unique="false" columns="class_id"/>
+      <index name="IDX_46C8B806EA000B103D9AB4A6DF9183C9" unique="false" columns="class_id,object_identity_id,security_identity_id"/>
+    </table>
+    <table name="acl_object_identities" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="parent_object_identity_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="class_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="object_identifier" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="entries_inheriting" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_9407E54977FA751A" columns="parent_object_identity_id" ref-table="acl_object_identities" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK_46C8B8063D9AB4A6" table="acl_entries" schema="" catalog="blogger" columns="object_identity_id"/>
+      <exported-key name="FK_9407E54977FA751A" table="acl_object_identities" schema="" catalog="blogger" columns="parent_object_identity_id"/>
+      <exported-key name="FK_825DE2993D9AB4A6" table="acl_object_identity_ancestors" schema="" catalog="blogger" columns="object_identity_id"/>
+      <exported-key name="FK_825DE299C671CEA1" table="acl_object_identity_ancestors" schema="" catalog="blogger" columns="ancestor_id"/>
+      <index name="UNIQ_9407E5494B12AD6EA000B10" unique="true" columns="object_identifier,class_id"/>
+      <index name="IDX_9407E54977FA751A" unique="false" columns="parent_object_identity_id"/>
+    </table>
+    <table name="acl_object_identity_ancestors" schema="" catalog="blogger" type="TABLE">
+      <column name="object_identity_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ancestor_id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="object_identity_id,ancestor_id"/>
+      <foreign-key name="FK_825DE2993D9AB4A6" columns="object_identity_id" ref-table="acl_object_identities" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <foreign-key name="FK_825DE299C671CEA1" columns="ancestor_id" ref-table="acl_object_identities" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <index name="IDX_825DE2993D9AB4A6" unique="false" columns="object_identity_id"/>
+      <index name="IDX_825DE299C671CEA1" unique="false" columns="ancestor_id"/>
+    </table>
+    <table name="acl_security_identities" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="identifier" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
+      <column name="username" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_46C8B806DF9183C9" table="acl_entries" schema="" catalog="blogger" columns="security_identity_id"/>
+      <index name="UNIQ_8835EE78772E836AF85E0677" unique="true" columns="identifier,username"/>
+    </table>
+    <table name="blog" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="private" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="blog" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="tags" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="updated" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="slug" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_9474526CDAE07E97" table="comment" schema="" catalog="blogger" columns="blog_id"/>
+      <exported-key name="FK_C53D045FDAE07E97" table="image" schema="" catalog="blogger" columns="blog_id"/>
+      <exported-key name="FK_BA941D8ADAE07E97" table="user_blog" schema="" catalog="blogger" columns="blog_id"/>
+    </table>
+    <table name="comment" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="blog_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="comment" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="approved" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="updated" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="parent_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="lft" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="lvl" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="rgt" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="root" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_9474526C727ACA70" columns="parent_id" ref-table="comment" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <foreign-key name="FK_9474526CA76ED395" columns="user_id" ref-table="fos_user" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_9474526CDAE07E97" columns="blog_id" ref-table="blog" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK_9474526C727ACA70" table="comment" schema="" catalog="blogger" columns="parent_id"/>
+      <index name="IDX_9474526C727ACA70" unique="false" columns="parent_id"/>
+      <index name="IDX_9474526CA76ED395" unique="false" columns="user_id"/>
+      <index name="IDX_9474526CDAE07E97" unique="false" columns="blog_id"/>
+    </table>
+    <table name="config_params" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="contact_email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="latest_comment_limit" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="comment_page_limit" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="blog_page_limit" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="comment_limit_tree_level" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="blog_total_count_limit" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="ext_log_entries" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="action" sqlType="VARCHAR" precision="8" scale="0" nullable="false" jdbcType="12"/>
+      <column name="logged_at" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="object_id" sqlType="VARCHAR" precision="64" scale="0" nullable="true" jdbcType="12"/>
+      <column name="object_class" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="version" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="data" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="true" jdbcType="-1" remarks="KERDMlR5cGU6YXJyYXkp"/>
+      <column name="username" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="log_class_lookup_idx" unique="false" columns="object_class"/>
+      <index name="log_date_lookup_idx" unique="false" columns="logged_at"/>
+      <index name="log_user_lookup_idx" unique="false" columns="username"/>
+      <index name="log_version_lookup_idx" unique="false" columns="object_id,object_class,version"/>
+    </table>
+    <table name="ext_translations" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="locale" sqlType="VARCHAR" precision="8" scale="0" nullable="false" jdbcType="12"/>
+      <column name="object_class" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="field" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="foreign_key" sqlType="VARCHAR" precision="64" scale="0" nullable="false" jdbcType="12"/>
+      <column name="content" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="true" jdbcType="-1"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="lookup_unique_idx" unique="true" columns="locale,object_class,field,foreign_key"/>
+      <index name="translations_lookup_idx" unique="false" columns="locale,object_class,foreign_key"/>
+    </table>
+    <table name="fos_user" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="username" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="username_canonical" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email_canonical" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="enabled" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="salt" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="last_login" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="locked" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="expired" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="expires_at" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="confirmation_token" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="password_requested_at" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="roles" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1" remarks="KERDMlR5cGU6YXJyYXkp"/>
+      <column name="credentials_expired" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="credentials_expire_at" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="api_key" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="facebook_id" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="facebook_access_token" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="google_id" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="google_access_token" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_9474526CA76ED395" table="comment" schema="" catalog="blogger" columns="user_id"/>
+      <exported-key name="FK_BA941D8AA76ED395" table="user_blog" schema="" catalog="blogger" columns="user_id"/>
+      <index name="UNIQ_957A647992FC23A8" unique="true" columns="username_canonical"/>
+      <index name="UNIQ_957A6479A0D96FBF" unique="true" columns="email_canonical"/>
+    </table>
+    <table name="image" schema="" catalog="blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="blog_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="path" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="main" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_C53D045FDAE07E97" columns="blog_id" ref-table="blog" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="IDX_C53D045FDAE07E97" unique="false" columns="blog_id"/>
+    </table>
+    <table name="migration_versions" schema="" catalog="blogger" type="TABLE">
+      <column name="version" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="version"/>
+    </table>
+    <table name="user_blog" schema="" catalog="blogger" type="TABLE">
+      <column name="user_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="blog_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="user_id,blog_id"/>
+      <foreign-key name="FK_BA941D8AA76ED395" columns="user_id" ref-table="fos_user" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK_BA941D8ADAE07E97" columns="blog_id" ref-table="blog" ref-schema="" ref-catalog="blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="IDX_BA941D8AA76ED395" unique="false" columns="user_id"/>
+      <index name="IDX_BA941D8ADAE07E97" unique="false" columns="blog_id"/>
+    </table>
+  </data-source>
+  <data-source name="MySQL - my_blogger@localhost" uuid="1df2fad4-4d04-4ac8-a2b6-c40142de447c">
+    <database-info product="MySQL" version="5.5.46-0ubuntu0.14.04.2" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact"/>
+    <schema name="" catalog="my_blogger"/>
+    <table name="blog" schema="" catalog="my_blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="title" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="author" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="blog" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="tags" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="updated" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="slug" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_9474526CDAE07E97" table="comment" schema="" catalog="my_blogger" columns="blog_id"/>
+      <exported-key name="FK_C53D045FDAE07E97" table="image" schema="" catalog="my_blogger" columns="blog_id"/>
+    </table>
+    <table name="comment" schema="" catalog="my_blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="blog_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="user" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="comment" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="approved" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="created" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="updated" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_9474526CDAE07E97" columns="blog_id" ref-table="blog" ref-schema="" ref-catalog="my_blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="IDX_9474526CDAE07E97" unique="false" columns="blog_id"/>
+    </table>
+    <table name="fos_user" schema="" catalog="my_blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="username" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="username_canonical" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email_canonical" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="enabled" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="salt" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="last_login" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="locked" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="expired" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="expires_at" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="confirmation_token" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="password_requested_at" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="roles" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1" remarks="KERDMlR5cGU6YXJyYXkp"/>
+      <column name="credentials_expired" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="credentials_expire_at" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="UNIQ_957A647992FC23A8" unique="true" columns="username_canonical"/>
+      <index name="UNIQ_957A6479A0D96FBF" unique="true" columns="email_canonical"/>
+    </table>
+    <table name="image" schema="" catalog="my_blogger" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="blog_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_C53D045FDAE07E97" columns="blog_id" ref-table="blog" ref-schema="" ref-catalog="my_blogger" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="IDX_C53D045FDAE07E97" unique="false" columns="blog_id"/>
+    </table>
+    <table name="migration_versions" schema="" catalog="my_blogger" type="TABLE">
+      <column name="version" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="version"/>
+    </table>
+  </data-source>
+</component>
