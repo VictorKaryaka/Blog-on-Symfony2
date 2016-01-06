@@ -26,7 +26,7 @@ class BlogController extends Controller
     public function showAction($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->find($id);
+        $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneById($id);
 
         if (!$blog) {
             return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_error', ['error' => 'Blog not found!']));
@@ -37,7 +37,7 @@ class BlogController extends Controller
             ->getCommentsForBlog($blog->getId());
 
         return [
-            'blogs' => $blog,
+            'blog' => $blog,
             'comments' => $comments,
         ];
     }
