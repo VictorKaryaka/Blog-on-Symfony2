@@ -373,9 +373,9 @@ class Blog
      */
     public function upload()
     {
-        if (is_object($this->uploadedFiles)) {
+        foreach ($this->uploadedFiles as $uploadedFile) {
 
-            foreach ($this->uploadedFiles as $uploadedFile) {
+            if (is_object($uploadedFile)) {
                 $image = new Image();
                 $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
                 $image->setName($imageName);
