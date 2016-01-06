@@ -1,0 +1,13 @@
+{% extends 'BloggerBlogBundle::layout.html.twig' %}
+
+{% block title %}Error{% endblock %}
+
+{% block body %}
+    <article class="blog">
+        <header>
+            <div class="date">
+                {{ error }}
+            </div>
+        </header>
+    </article>
+{% endblock %}

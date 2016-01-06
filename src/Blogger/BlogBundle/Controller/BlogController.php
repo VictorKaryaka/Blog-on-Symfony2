@@ -28,9 +28,8 @@ class BlogController extends Controller
         $entityManager = $this->getDoctrine()->getManager();
         $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->find($id);
 
-        //Переделать чтобы не пугать юзера эксешпшином
         if (!$blog) {
-            throw $this->createNotFoundException('Unable to find Blog post.');
+            return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_error', ['error' => 'Blog not found!']));
         }
 
         $comments = $entityManager
@@ -91,4 +90,14 @@ class BlogController extends Controller
         return ['form' => $form->createView()];
     }
 
+    /**
+     * @Route("/error/{error}", name = "BloggerBlogBundle_blog_error")
+     * @Template("BloggerBlogBundle:Blog:error.html.twig")
+     * @param $error
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function errorAction($error)
+    {
+        return ['error' => $error];
+    }
 }
