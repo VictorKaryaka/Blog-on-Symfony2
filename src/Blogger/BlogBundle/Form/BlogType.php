@@ -17,7 +17,13 @@ class BlogType extends AbstractType
             ->add('title')
             ->add('blog', 'textarea')
             ->add('tags')
-            ->add('uploadedFiles', 'file', array('multiple' => true, 'label' => 'Select image', 'data_class' => null));
+            ->add('uploadedFiles', 'file', array(
+                'required' => false,
+                'multiple' => true,
+                'label' => 'Select image',
+                'data_class' => null,
+                'empty_data' => null
+            ));
     }
 
     /**

@@ -371,15 +371,21 @@ class Blog
     /**
      * @ORM\PreFlush()
      */
-    public function uploadImage()
+    public function upload()
     {
         foreach ($this->uploadedFiles as $uploadedFile)
         {
             $image = new Image();
-            $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
-            $image->setName($imageName);
-            $imageDir = __DIR__.'/../../../../web/images';
-            $uploadedFile->move($imageDir, $imageName);
+
+            if (is_object($uploadedFile)) {
+                $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
+                $image->setName($imageName);
+                $imageDir = __DIR__.'/../../../../web/images';
+                $uploadedFile->move($imageDir, $imageName);
+            } else {
+                $image->setName('NULL');
+            }
+
             $this->getImage()->add($image);
             $image->setBlog($this);
 
