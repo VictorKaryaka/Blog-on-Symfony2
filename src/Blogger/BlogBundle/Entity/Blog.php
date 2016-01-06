@@ -4,8 +4,6 @@ namespace Blogger\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Blogger\BlogBundle\Entity\Comment;
-use Blogger\BlogBundle\Entity\Image;
 
 /**
  * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
@@ -339,7 +337,7 @@ class Blog
     /**
      * Add image
      *
-     * @param \Blogger\BlogBundle\Entity\Image $image
+     * @param Image $image
      *
      * @return Blog
      */
@@ -373,14 +371,15 @@ class Blog
     /**
      * @ORM\PreFlush()
      */
-    public function upload()
+    public function uploadImage()
     {
         foreach ($this->uploadedFiles as $uploadedFile)
         {
             $image = new Image();
-            $image->setName($uploadedFile->getClientOriginalName());
+            $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
+            $image->setName($imageName);
             $imageDir = __DIR__.'/../../../../web/images';
-            $uploadedFile->move($imageDir, $uploadedFile->getClientOriginalName());
+            $uploadedFile->move($imageDir, $imageName);
             $this->getImage()->add($image);
             $image->setBlog($this);
 

@@ -1,20 +1,22 @@
 {% extends 'BloggerBlogBundle::layout.html.twig' %}
 
-{% block title %}{{ blog.title }}{% endblock %}
+{% block title %}{{ blogs.title }}{% endblock %}
 
 {% block body %}
     <article class="blog">
         <header>
             <div class="date">
-                <time datetime="{{ blog.created|date('c') }}">{{ blog.created|date('l, F j, Y') }}</time>
+                <time datetime="{{ blogs.created|date('c') }}">{{ blogs.created|date('l, F j, Y') }}</time>
             </div>
-            <h2>{{ blog.title }}</h2>
+            <h2>{{ blogs.title }}</h2>
         </header>
 
-        <img src="{{ asset(['images/', image.name]|join) }}" alt="image not found" class="large"/>
+        {% for blog in blogs.getImage.getValues %}
+            <img src="{{ asset(['images/', blog.name]|join) }}" alt="image not found" class="large"/>
+        {% endfor %}
 
         <div>
-            <p>{{ blog.blog }}</p>
+            <p>{{ blogs.blog }}</p>
         </div>
     </article>
 
@@ -25,7 +27,7 @@
         </section>
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <h3>Add Comment</h3>
-            {{ render (controller ('BloggerBlogBundle:Comment:newFormComment', { 'blog_id': blog.id })) }}
+            {{ render (controller ('BloggerBlogBundle:Comment:newFormComment', { 'blog_id': blogs.id })) }}
         {% endif %}
     </section>
 {% endblock %}

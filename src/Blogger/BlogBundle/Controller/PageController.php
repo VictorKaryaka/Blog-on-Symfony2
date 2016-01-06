@@ -22,12 +22,8 @@ class PageController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->getLatestBlogs();
-        $images = $entityManager->getRepository('BloggerBlogBundle:Image')->getImages();
 
-        return [
-            'blogs' => $blogs,
-            'images' => $images
-        ];
+        return ['blogs' => $blogs];
     }
 
     /**

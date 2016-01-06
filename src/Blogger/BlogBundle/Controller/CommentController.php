@@ -55,14 +55,14 @@ class CommentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
 
             return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_show', [
                     'id' => $comment->getBlog()->getId(),
-                    'slug' => $comment->getBlog()->getSlug()]) . '#comment-' . $comment->getId()
+                    'slug' => $comment->getBlog()->getSlug()
+                ]) . '#comment-' . $comment->getId()
             );
         }
 

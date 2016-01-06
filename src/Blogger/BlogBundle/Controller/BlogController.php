@@ -27,8 +27,8 @@ class BlogController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->find($id);
-        $image = $entityManager->getRepository('BloggerBlogBundle:Image')->findOneBy(['blog' => $id]);
 
+        //Переделать чтобы не пугать юзера эксешпшином
         if (!$blog) {
             throw $this->createNotFoundException('Unable to find Blog post.');
         }
@@ -38,9 +38,8 @@ class BlogController extends Controller
             ->getCommentsForBlog($blog->getId());
 
         return [
-            'blog' => $blog,
+            'blogs' => $blog,
             'comments' => $comments,
-            'image' => $image
         ];
     }
 
@@ -83,7 +82,10 @@ class BlogController extends Controller
             $entityManager->persist($blog);
             $entityManager->flush();
 
-            return $this->redirect($this->generateUrl('BloggerBlogBundle_homepage'));
+            return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_show', [
+                'id' => $blog->getId(),
+                'slug' => $blog->getSlug()
+            ]));
         }
 
         return ['form' => $form->createView()];

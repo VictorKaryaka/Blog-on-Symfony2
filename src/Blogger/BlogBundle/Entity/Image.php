@@ -4,10 +4,9 @@ namespace Blogger\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Blogger\BlogBundle\Entity\Blog;
 
 /**
- * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\ImageRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="image")
  * @ORM\HasLifecycleCallbacks
  */

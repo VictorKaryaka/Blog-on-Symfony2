@@ -13,7 +13,7 @@
                 </h2>
             </header>
 
-            <img src="{{ asset(['images/', images[loop.revindex0].name]|join) }}"/>
+            <img src="{{ asset(['images/', blog.getImage.get(0).getName]|join) }}"/>
 
             <div class="snippet">
                 <p>{{ blog.blog(500) }}</p>
