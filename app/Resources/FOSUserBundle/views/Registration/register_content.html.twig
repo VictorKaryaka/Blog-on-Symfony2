@@ -1,0 +1,38 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+{{form_start(form, {'method': 'POST', 'attr':{'class': 'register'}})}}
+<div class="row">
+    <div class="input-field col s12">
+        <label class="register-label">Login</label>
+        {{ form_widget(form.username) }}
+    </div>
+    {{ form_errors(form.username) }}
+</div>
+<div class="row no-padding">
+    <div class="input-field col s12">
+        <label class="register-label">Email</label>
+        {{ form_widget(form.email) }}
+    </div>
+    {{ form_errors(form.email) }}
+</div>
+<div class="row no-padding">
+    <div class="input-field col s12">
+        <label class="register-label">Password</label>
+        {{ form_widget(form.plainPassword.first) }}
+    </div>
+    {{ form_errors(form.plainPassword.first) }}
+</div>
+<div class="row no-padding">
+    <div class="input-field col s12">
+        <label class="register-label">Password confirmation</label>
+        {{ form_widget(form.plainPassword.second) }}
+    </div>
+    {{ form_errors(form.plainPassword.second) }}
+</div>
+<div align="center" class="button-wrap">
+    <button class="btn-large waves-effect waves-light" type="submit" name="action">
+        <i class="material-icons">Registration</i>
+    </button>
+</div>
+{{ form_end(form) }}
