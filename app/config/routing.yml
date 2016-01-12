@@ -1,6 +1,20 @@
+blogger_rest:
+    resource: "@BloggerRestBundle/Resources/config/routing.yml"
+    prefix:   /
+
 BloggerBlogBundle:
     resource: "@BloggerBlogBundle/Controller/"
     type: annotation
 
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+blog:
+    type:    rest
+    prefix:  /api
+    resource: "@BloggerRestBundle/Controller/BlogController.php"
+
+comment:
+    type:    rest
+    prefix:  /api
+    resource: "@BloggerRestBundle/Controller/CommentController.php"
