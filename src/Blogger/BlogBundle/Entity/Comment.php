@@ -5,12 +5,15 @@ namespace Blogger\BlogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Blogger\BlogBundle\Entity\Blog;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\CommentRepository")
  * @ORM\Table(name="comment")
  * @ORM\HasLifecycleCallbacks
+ *
+ * @ExclusionPolicy("all")
  */
 class Comment
 {
@@ -23,11 +26,13 @@ class Comment
 
     /**
      * @ORM\Column(type="string")
+     * @Expose
      */
     protected $user;
 
     /**
      * @ORM\Column(type="text")
+     * @Expose
      */
     protected $comment;
 
@@ -60,7 +65,7 @@ class Comment
     }
 
     /**
-     * @ORM\preUpdate
+     * @ORM\PreUpdate
      */
     public function setUpdatedValue()
     {
@@ -204,7 +209,7 @@ class Comment
      *
      * @return Comment
      */
-    public function setBlog(Blog $blog = null)
+    public function setBlog(Blog $blog)
     {
         $this->blog = $blog;
 

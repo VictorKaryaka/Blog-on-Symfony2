@@ -4,6 +4,7 @@ namespace Blogger\BlogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BlogType extends AbstractType
 {
@@ -24,6 +25,16 @@ class BlogType extends AbstractType
                 'data_class' => null,
                 'empty_data' => null
             ]);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'csrf_protection' => false
+        ));
     }
 
     /**

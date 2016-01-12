@@ -4,11 +4,16 @@ namespace Blogger\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
+ * @ORM\Entity
  * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
  * @ORM\Table(name="blog")
  * @ORM\HasLifecycleCallbacks
+ *
+ * @ExclusionPolicy("all")
  */
 class Blog
 {
@@ -21,36 +26,42 @@ class Blog
 
     /**
      * @ORM\Column(type="string")
+     * @Expose
      */
     protected $title;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Expose
      */
     protected $author;
 
     /**
      * @ORM\Column(type="text")
+     * @Expose
      */
     protected $blog;
 
     /**
-     * @ORM\Column(type="text")`
+     * @ORM\Column(type="text")
+     * @Expose
      */
     protected $tags;
 
     /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog")
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog", cascade={"remove"})
      */
     protected $comments;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     protected $created;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     protected $updated;
 
@@ -60,7 +71,8 @@ class Blog
     protected $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="blog", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="blog", cascade={"persist", "remove"})
+     * @Expose
      */
     protected $image;
 
@@ -373,18 +385,20 @@ class Blog
      */
     public function upload()
     {
-        foreach ($this->uploadedFiles as $uploadedFile) {
+        if (!$this->uploadedFiles == null) {
+            foreach ($this->uploadedFiles as $uploadedFile) {
 
-            if (is_object($uploadedFile)) {
-                $image = new Image();
-                $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
-                $image->setName($imageName);
-                $imageDir = __DIR__ . '/../../../../web/images';
-                $uploadedFile->move($imageDir, $imageName);
-                $this->getImage()->add($image);
-                $image->setBlog($this);
+                if (is_object($uploadedFile)) {
+                    $image = new Image();
+                    $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
+                    $image->setName($imageName);
+                    $imageDir = __DIR__ . '/../../../../web/images';
+                    $uploadedFile->move($imageDir, $imageName);
+                    $this->getImage()->add($image);
+                    $image->setBlog($this);
 
-                unset($uploadedFile);
+                    unset($uploadedFile);
+                }
             }
         }
     }
