@@ -101,3 +101,7 @@ fos_rest:
         default_engine: twig
     routing_loader:
         default_format: json
+
+uecode_api_key:
+    delivery: header
+    parameter_name: token

@@ -13,14 +13,25 @@ security:
         in_memory:
             memory: ~
 
+
         fos_userbundle:
             id: fos_user.user_provider.username
+
+        db:
+            id: uecode.api_key.provider.user_provider
+
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        auth:
+            pattern: ^/api/*
+            api_key: true
+            stateless: true
+            provider: db
 
         main:
             anonymous: ~
