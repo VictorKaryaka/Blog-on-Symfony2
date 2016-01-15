@@ -15,19 +15,15 @@ class BlogController extends FOSRestController
      */
     public function getBlogAction(Blog $blog)
     {
-        if ($this->getUser()) {
-            return ['blog' => $blog];
-        }
+        return ['blog' => $blog];
     }
 
     public function getBlogsAction()
     {
-        if ($this->getUser()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->findAll();
+        $entityManager = $this->getDoctrine()->getManager();
+        $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->findAll();
 
-            return ['blogs' => $blogs];
-        }
+        return ['blogs' => $blogs];
     }
 
     /**
@@ -36,23 +32,21 @@ class BlogController extends FOSRestController
      */
     public function postBlogAction(Request $request)
     {
-        if ($this->getUser()) {
-            $content = json_decode($request->getContent(), true);
-            $blog = new Blog();
-            $blog->setAuthor($this->getUser()->getUsername());
-            $form = $this->createForm(new BlogType(), $blog);
-            $form->submit($content);
+        $content = json_decode($request->getContent(), true);
+        $blog = new Blog();
+        $blog->setAuthor($this->getUser()->getUsername());
+        $form = $this->createForm(new BlogType(), $blog);
+        $form->submit($content);
 
-            if ($form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($blog);
-                $entityManager->flush();
+        if ($form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($blog);
+            $entityManager->flush();
 
-                return $this->getBlogAction($blog);
-            }
-
-            return $form->getErrors();
+            return $this->getBlogAction($blog);
         }
+
+        return $form->getErrors();
     }
 
     /**
@@ -62,22 +56,20 @@ class BlogController extends FOSRestController
      */
     public function putBlogAction(Request $request, Blog $blog)
     {
-        if ($this->getUser()) {
-            $content = json_decode($request->getContent(), true);
-            $entityManager = $this->getDoctrine()->getManager();
-            $blog->setAuthor($this->getUser()->getUsername());
-            $form = $this->createForm(new BlogType(), $blog);
-            $form->submit($content);
+        $content = json_decode($request->getContent(), true);
+        $entityManager = $this->getDoctrine()->getManager();
+        $blog->setAuthor($this->getUser()->getUsername());
+        $form = $this->createForm(new BlogType(), $blog);
+        $form->submit($content);
 
-            if ($form->isValid()) {
-                $entityManager->persist($blog);
-                $entityManager->flush();
+        if ($form->isValid()) {
+            $entityManager->persist($blog);
+            $entityManager->flush();
 
-                return $this->getBlogAction($blog);
-            }
-
-            return $form->getErrors();
+            return $this->getBlogAction($blog);
         }
+
+        return $form->getErrors();
     }
 
     /**
@@ -86,12 +78,10 @@ class BlogController extends FOSRestController
      */
     public function deleteBlogAction(Blog $blog)
     {
-        if ($this->getUser()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($blog);
-            $entityManager->flush();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($blog);
+        $entityManager->flush();
 
-            return $this->getBlogsAction();
-        }
+        return $this->getBlogsAction();
     }
 }

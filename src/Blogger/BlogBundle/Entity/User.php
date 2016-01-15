@@ -3,18 +3,18 @@
 namespace Blogger\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Uecode\Bundle\ApiKeyBundle\Model\ApiKeyUser;
+use FOS\UserBundle\Model\User as BaseUser;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(name="fos_user")
  */
-class User extends ApiKeyUser
+class User extends BaseUser
 {
     public function __construct()
     {
         parent::__construct();
-        $this->setEnabled(true);
+        $this->apiKey = md5(uniqid());
     }
 
     /**
@@ -28,4 +28,20 @@ class User extends ApiKeyUser
      * @ORM\Column(type="string", name="api_key")
      */
     protected $apiKey;
+
+    /**
+     * @return mixed
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param $apiKey
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
 }

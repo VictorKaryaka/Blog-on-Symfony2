@@ -283,7 +283,7 @@ class Blog
     }
 
     /**
-     * @ORM\PreUpdate
+     * @ORM\PreUpdate()
      */
     public function setUpdatedValue()
     {

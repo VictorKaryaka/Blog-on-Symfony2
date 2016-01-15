@@ -16,12 +16,10 @@ class CommentController extends FOSRestController
      */
     public function getCommentsAction(Blog $blog)
     {
-        if ($this->getUser()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $comments = $entityManager->getRepository('BloggerBlogBundle:Comment')->findBy(['blog' => $blog->getId()]);
+        $entityManager = $this->getDoctrine()->getManager();
+        $comments = $entityManager->getRepository('BloggerBlogBundle:Comment')->findBy(['blog' => $blog->getId()]);
 
-            return ['comments' => $comments];
-        }
+        return ['comments' => $comments];
     }
 
     /**
@@ -31,24 +29,22 @@ class CommentController extends FOSRestController
      */
     public function postCommentAction(Request $request, Blog $blog)
     {
-        if ($this->getUser()) {
-            $content = json_decode($request->getContent(), true);
-            $comment = new Comment();
-            $comment->setBlog($blog);
-            $comment->setUser($this->getUser()->getUsername());
-            $form = $this->createForm(new CommentType(), $comment);
-            $form->submit($content);
+        $content = json_decode($request->getContent(), true);
+        $comment = new Comment();
+        $comment->setBlog($blog);
+        $comment->setUser($this->getUser()->getUsername());
+        $form = $this->createForm(new CommentType(), $comment);
+        $form->submit($content);
 
-            if ($form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($comment);
-                $entityManager->flush();
+        if ($form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
 
-                return $this->getCommentsAction($blog);
-            }
-
-            return $form->getErrors();
+            return $this->getCommentsAction($blog);
         }
+
+        return $form->getErrors();
     }
 
     /**
@@ -58,21 +54,19 @@ class CommentController extends FOSRestController
      */
     public function putCommentAction(Request $request, Comment $comment)
     {
-        if ($this->getUser()) {
-            $content = json_decode($request->getContent(), true);
-            $form = $this->createForm(new CommentType(), $comment);
-            $form->submit($content);
+        $content = json_decode($request->getContent(), true);
+        $form = $this->createForm(new CommentType(), $comment);
+        $form->submit($content);
 
-            if ($form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($comment);
-                $entityManager->flush();
+        if ($form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
 
-                return $this->getCommentsAction($comment->getBlog());
-            }
-
-            return $form->getErrors();
+            return $this->getCommentsAction($comment->getBlog());
         }
+
+        return $form->getErrors();
     }
 
     /**
@@ -81,12 +75,10 @@ class CommentController extends FOSRestController
      */
     public function deleteCommentAction(Comment $comment)
     {
-        if ($this->getUser()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($comment);
-            $entityManager->flush();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($comment);
+        $entityManager->flush();
 
-            return $this->getCommentsAction($comment->getBlog());
-        }
+        return $this->getCommentsAction($comment->getBlog());
     }
 }

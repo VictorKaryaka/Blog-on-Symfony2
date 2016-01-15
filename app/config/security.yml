@@ -1,5 +1,3 @@
-# To get started with security, check out the documentation:
-# http://symfony.com/doc/current/book/security.html
 security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
@@ -8,30 +6,24 @@ security:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
-    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         in_memory:
             memory: ~
 
-
         fos_userbundle:
             id: fos_user.user_provider.username
 
-        db:
-            id: uecode.api_key.provider.user_provider
-
-
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
+        secured_area:
+            pattern: ^/api
+            stateless: true
+            simple_preauth:
+                authenticator: apikey_authenticator
+            provider: fos_userbundle
+
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
-        auth:
-            pattern: ^/api/*
-            api_key: true
-            stateless: true
-            provider: db
 
         main:
             anonymous: ~
@@ -57,3 +49,4 @@ security:
             - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/admin/, role: ROLE_ADMIN }
+            - { path: ^/api/, role: ROLE_API }
