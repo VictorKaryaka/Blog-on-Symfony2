@@ -1,12 +1,17 @@
 {% for comment in comments %}
     <article class="comment {{ cycle(['odd', 'even'], loop.index0) }}" id="comment-{{ comment.id }}">
         <header>
-            <p><span class="highlight">{{ comment.user }}</span> оставил комментарий
+            <p id="comment-header"><span class="highlight">{{ comment.user }}</span> оставил комментарий
                 <time datetime="{{ comment.created|date('c') }}">{{ comment.created|created_ago }}</time>
             </p>
         </header>
-        <p>{{ comment.comment }}</p>
+        <p id="comment">{{ comment.comment }}</p>
+        <input class="but-comment" type="button" value="Comment">
     </article>
 {% else %}
-    <p>К этому сообщению пока нет комментариев. Будьте первым и добавьте свой комментарий...</p>
+    {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <p>К этому блогу пока нет комментариев. Будьте первым и добавьте свой комментарий...</p>
+    {% else %}
+        <p>К этому блогу пока нет комментариев</p>
+    {% endif %}
 {% endfor %}

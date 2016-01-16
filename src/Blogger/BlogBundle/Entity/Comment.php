@@ -49,6 +49,7 @@ class Comment
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     protected $created;
 

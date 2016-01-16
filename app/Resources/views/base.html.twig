@@ -55,11 +55,15 @@
 
     <div id="footer">
         {% block footer %}
-            Symfony2 blog tutorial - created by Viktor</a>
+            Symfony2 blog tutorial - created by Viktor
         {% endblock %}
     </div>
 </section>
-
-{% block javascripts %}{% endblock %}
 </body>
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/jquery-2.2.0.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/comments.js') }}" ></script>
+{% endblock %}
+
 </html>
