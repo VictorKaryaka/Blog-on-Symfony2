@@ -6,12 +6,21 @@
             </p>
         </header>
         <p id="comment">{{ comment.comment }}</p>
-        <input class="but-comment" type="button" value="Comment">
+
+        {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <input class="but-comment" type="button" value="Comment">
+        {% endif %}
+
     </article>
 {% else %}
     {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <p>К этому блогу пока нет комментариев. Будьте первым и добавьте свой комментарий...</p>
+        <p class="not-comment">К этому блогу пока нет комментариев. Будьте первым и добавьте свой комментарий...</p>
     {% else %}
-        <p>К этому блогу пока нет комментариев</p>
+        <p class="not-comment">К этому блогу пока нет комментариев</p>
     {% endif %}
 {% endfor %}
+
+{% if not is_granted("IS_AUTHENTICATED_FULLY") or not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    <p>Вы не можете добавить комментарий. Пожалуйста <a href="{{ path('fos_user_security_login') }}">войдите</a>
+        или <a href="{{ path('fos_user_registration_register') }}">зарегистрируйтесь</a>!</p>
+{% endif %}

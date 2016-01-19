@@ -1,5 +1,4 @@
-{#<form action="{{ path('BloggerBlogBundle_comment_create', { 'blog_id' : comment.blog.id } ) }}"#}
-<form onsubmit="return false;"
+<form id="form-comment" action="{{ path('BloggerBlogBundle_comment_create', { 'blog_id' : comment.blog.id } ) }}"
       method="post" {{ form_enctype(form) }} class="blogger">
     {{ form_widget(form) }}
     <p>
@@ -7,13 +6,13 @@
     </p>
 </form>
 
-<div id="last" align="center">
-    <form method="POST" class="add_comment" name="add_comment" id="hint">
-        <div class="close_hint">Закрыть</div>
-        <textarea cols="68" rows="5" name="user_text"></textarea>
+{#form<div id="last" align="center">#}
+    {#<form method="POST" class="add_comment" name="add_comment" id="hint">#}
+        {#<div class="close_hint">Закрыть</div>#}
+        {#<textarea cols="68" rows="5" name="user_text"></textarea>#}
 
-        <div style="margin:5px; float:right;">
-            <input type="submit" value="Отправить">
-        </div>
-    </form>
-</div>
+        {#<div style="margin:5px; float:right;">#}
+            {#<input type="submit" value="Отправить">#}
+        {#</div>#}
+    {#</form>#}
+{#</div>#}

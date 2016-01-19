@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Blogger\BlogBundle\Entity\Comment;
 use Blogger\BlogBundle\Form\CommentType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -59,11 +60,13 @@ class CommentController extends Controller
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_show', [
-                    'id' => $comment->getBlog()->getId(),
-                    'slug' => $comment->getBlog()->getSlug()
-                ]) . '#comment-' . $comment->getId()
-            );
+            $commentArray = [
+                'user' => $comment->getUser(),
+                'comment' => $comment->getComment(),
+                'created' => $comment->getCreated()
+            ];
+
+            return new JsonResponse($commentArray);
         }
 
         return [
@@ -71,6 +74,8 @@ class CommentController extends Controller
             'form' => $form->createView()
         ];
     }
+
+    public function addCommentAction(){}
 
     /**
      * @param $blog_id
