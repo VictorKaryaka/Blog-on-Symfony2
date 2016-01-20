@@ -3,6 +3,8 @@
 namespace Blogger\BlogBundle\Controller;
 
 use Blogger\BlogBundle\Entity\Blog;
+use Blogger\BlogBundle\Entity\Comment;
+use Blogger\BlogBundle\Form\CommentType;
 use Blogger\BlogBundle\Entity\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,9 +38,14 @@ class BlogController extends Controller
             ->getRepository('BloggerBlogBundle:Comment')
             ->getCommentsForBlog($blog->getId());
 
+        $comment = new Comment();
+        $comment->setBlog($blog);
+        $form = $this->createForm(new CommentType(), $comment);
+
         return [
             'blog' => $blog,
-            'comments' => $comments,
+            'comments' => $this->getSortComments($comments),
+            'form' => $form,
         ];
     }
 
@@ -99,5 +106,51 @@ class BlogController extends Controller
     public function errorAction($error)
     {
         return ['error' => $error];
+    }
+
+    /**
+     * @param $comments
+     * @return array
+     */
+    private function getSortComments($comments)
+    {
+        $sortComments = [];
+        $idKeyComments = [];
+        $parentIdKeyComments = [];
+
+        foreach ($comments as $comment) {
+            $idKeyComments[$comment->getId()] = $comment;
+
+            if ($comment->getParentId() != null) {
+                $parentIdKeyComments[$comment->getParentId()] = $comment;
+            }
+        }
+
+        foreach ($idKeyComments as $key => $commentEntity) {
+
+            if (! array_key_exists($key, $idKeyComments)) {
+                continue;
+            }
+
+            if (! array_key_exists($key, $parentIdKeyComments) && $commentEntity->getParentId() == null) {
+                array_push($sortComments, $idKeyComments[$key]);
+            } else {
+                $keyNestedComment = $key;
+
+                foreach ($parentIdKeyComments as $id => $entity) {
+
+                    if ($id == $keyNestedComment) {
+                        array_push($sortComments, $idKeyComments[$keyNestedComment]);
+                        unset($idKeyComments[$keyNestedComment]);
+                        $keyNestedComment = $entity->getId();
+                    }
+                }
+
+                array_push($sortComments, $idKeyComments[$keyNestedComment]);
+                unset($idKeyComments[$keyNestedComment]);
+            }
+        }
+
+        return $sortComments;
     }
 }

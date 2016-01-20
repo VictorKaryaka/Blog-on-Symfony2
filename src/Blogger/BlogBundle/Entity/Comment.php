@@ -58,6 +58,12 @@ class Comment
      */
     protected $updated;
 
+    /**
+     * @ORM\Column(type="integer", name="parent_id", nullable=true)
+     * @Expose
+     */
+    protected $parentId;
+
     public function __construct()
     {
         $this->setCreated(new \DateTime());
@@ -225,6 +231,22 @@ class Comment
     public function getBlog()
     {
         return $this->blog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @param mixed $parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
     }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata)

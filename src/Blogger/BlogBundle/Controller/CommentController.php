@@ -52,8 +52,11 @@ class CommentController extends Controller
         $username = $this->getUser()->getUsername();
         $comment->setBlog($blog);
         $comment->setUser($username);
+//        $comment->setParentId();
         $form = $this->createForm(new CommentType(), $comment);
         $form->handleRequest($request);
+
+//        $a = $form->getErrors();
 
         if ($form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();

@@ -1,8 +1,9 @@
-function postComment() {
+function postComment(comment, parentId) {
     $.ajax({
         type: 'POST',
         url: $("#form-comment")[0].action,
-        data: $("#form-comment").serialize(),
+        //data: {'comment': comment.serialize(), 'parentId': parentId},
+        data: {'comment': comment.serialize()},
         success: function (data) {
             appendComment(data);
         }
@@ -27,18 +28,24 @@ $(document).ready(function () {
         var comment = $("#form-comment").text();
 
         if (comment != '') {
-            postComment();
+            postComment($(this));
             $("#commentType_comment").val('');
             $('.not-comment').remove();
         }
     });
 
-    //$(".but-comment").click(function(){
-    //    $("#hint").animate({
-    //        top: $(this).offset().top + 23,
-    //        left: $(this).offset().left - 540
-    //    }, 400).fadeIn(800);
-    //});
-    //
-    //$(".close_hint").click(function(){ $("#hint").fadeOut(1200); });
+    $(".but-comment").click(function () {
+        $(this).parent().find('.last').css('display', 'block');
+    });
+
+
+    $('body').on('click', '.close_hint', function () {
+        $(this).parents('.last').css('display', 'none');
+    });
+
+    $('body').on('click', '.send-comment', function () {
+        var id = $(this).parents('article').attr('id');
+        postComment($(this).parents('form'), Number(id.match(/\d+/)));
+    });
+
 });

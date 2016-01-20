@@ -1,16 +1,33 @@
+{% set shift = 30 %}
 {% for comment in comments %}
-    <article class="comment {{ cycle(['odd', 'even'], loop.index0) }}" id="comment-{{ comment.id }}">
+    {% if comment.parentId %}
+        <article class="comment parent" id="comment-{{ comment.id }}" style="margin-left: {{ shift }}px">
+        {% set shift = shift + 30 %}
+    {% else %}
+        <article class="comment" id="comment-{{ comment.id }}">
+        {% set shift = 30 %}
+    {% endif %}
         <header>
             <p id="comment-header"><span class="highlight">{{ comment.user }}</span> оставил комментарий
                 <time datetime="{{ comment.created|date('c') }}">{{ comment.created|created_ago }}</time>
             </p>
         </header>
+
         <p id="comment">{{ comment.comment }}</p>
 
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <input class="but-comment" type="button" value="Comment">
+            <div class="last" align="center">
+                <form method="post" class="add_comment" id="hint">
+                {{ form_widget(form) }}
+                    {#<textarea cols="30" rows="4" name="user_text"></textarea>#}
+                    <div>
+                        <input class="send-comment" type="button" value="Отправить">
+                        <input type="button" class="close_hint" value="Закрыть">
+                    </div>
+                </form>
+            </div>
         {% endif %}
-
     </article>
 {% else %}
     {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
