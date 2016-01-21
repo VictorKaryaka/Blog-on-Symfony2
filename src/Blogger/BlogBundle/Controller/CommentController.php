@@ -52,11 +52,8 @@ class CommentController extends Controller
         $username = $this->getUser()->getUsername();
         $comment->setBlog($blog);
         $comment->setUser($username);
-//        $comment->setParentId();
         $form = $this->createForm(new CommentType(), $comment);
         $form->handleRequest($request);
-
-//        $a = $form->getErrors();
 
         if ($form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -64,9 +61,11 @@ class CommentController extends Controller
             $entityManager->flush();
 
             $commentArray = [
+                'id' => $comment->getId(),
                 'user' => $comment->getUser(),
                 'comment' => $comment->getComment(),
-                'created' => $comment->getCreated()
+                'created' => $comment->getCreated(),
+                'parentId' => $comment->getParentId()
             ];
 
             return new JsonResponse($commentArray);

@@ -38,14 +38,9 @@ class BlogController extends Controller
             ->getRepository('BloggerBlogBundle:Comment')
             ->getCommentsForBlog($blog->getId());
 
-        $comment = new Comment();
-        $comment->setBlog($blog);
-        $form = $this->createForm(new CommentType(), $comment);
-
         return [
             'blog' => $blog,
             'comments' => $this->getSortComments($comments),
-            'form' => $form,
         ];
     }
 
