@@ -9,8 +9,7 @@
     {% endif %}
         <header>
             <p id="comment-header"><span class="highlight">{{ comment.user }}</span> оставил комментарий
-                {#<time datetime="{{ comment.created|date('c') }}">{{ comment.created|created_ago }}</time>#}
-                <time datetime="{{ comment.created|date('c') }}">{{ comment.created|date('c') }}</time>
+                <time datetime="{{ comment.created|date('c') }}">{{ comment.created|created_ago }}</time>
             </p>
         </header>
 

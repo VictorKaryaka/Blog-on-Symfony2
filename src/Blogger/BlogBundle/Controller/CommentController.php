@@ -43,10 +43,19 @@ class CommentController extends Controller
      * @Template("BloggerBlogBundle:Comment:create.html.twig")
      * @param Request $request
      * @param $blog_id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function createAction(Request $request, $blog_id)
     {
+        $response = new JsonResponse();
+        $commentMessage = $request->request->get('commentType');
+
+        if (strpos($commentMessage['comment'], '<script>') === 0) {
+            return $response->setData(['error' => 'Fuck off!']);
+        }
+
+        $commentMessage['comment'] = htmlspecialchars($commentMessage['comment']);
+        $request->request->set('commentType', $commentMessage);
         $blog = $this->getBlog($blog_id);
         $comment = new Comment();
         $username = $this->getUser()->getUsername();
@@ -60,15 +69,13 @@ class CommentController extends Controller
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            $commentArray = [
+            return $response->setData([
                 'id' => $comment->getId(),
                 'user' => $comment->getUser(),
                 'comment' => $comment->getComment(),
                 'created' => $comment->getCreated(),
                 'parentId' => $comment->getParentId()
-            ];
-
-            return new JsonResponse($commentArray);
+            ]);
         }
 
         return [
@@ -76,8 +83,6 @@ class CommentController extends Controller
             'form' => $form->createView()
         ];
     }
-
-    public function addCommentAction(){}
 
     /**
      * @param $blog_id

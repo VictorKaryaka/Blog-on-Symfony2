@@ -3,8 +3,6 @@
 namespace Blogger\BlogBundle\Controller;
 
 use Blogger\BlogBundle\Entity\Blog;
-use Blogger\BlogBundle\Entity\Comment;
-use Blogger\BlogBundle\Form\CommentType;
 use Blogger\BlogBundle\Entity\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -109,6 +107,10 @@ class BlogController extends Controller
      */
     private function getSortComments($comments)
     {
+        if (!is_array($comments)) {
+            return false;
+        }
+
         $sortComments = [];
         $idKeyComments = [];
         $parentIdKeyComments = [];
