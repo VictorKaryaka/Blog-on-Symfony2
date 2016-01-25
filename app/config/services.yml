@@ -11,3 +11,9 @@ services:
         arguments: [@doctrine.orm.entity_manager]
         public: false
 
+    admin.category:
+        class: Blogger\BlogBundle\Admin\UserAdmin
+        arguments: [~, Blogger\BlogBundle\Entity\User, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: User }
+

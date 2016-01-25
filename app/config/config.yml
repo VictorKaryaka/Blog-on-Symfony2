@@ -32,6 +32,7 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
+    translator:      { fallback: "%locale%" }
 
 # Assetic Configuration
 assetic:
@@ -101,3 +102,14 @@ fos_rest:
         default_engine: twig
     routing_loader:
         default_format: json
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts: [admin]
+
+#sonata_admin:
+#    title:      Blog Admin Area
+#    templates:
+#        show:       BloggerBlogBundle:Admin:base_show.html.twig
