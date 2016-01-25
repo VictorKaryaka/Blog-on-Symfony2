@@ -49,12 +49,7 @@ class CommentController extends Controller
     {
         $response = new JsonResponse();
         $commentMessage = $request->request->get('commentType');
-
-        if (strpos($commentMessage['comment'], '<script>') === 0) {
-            return $response->setData(['error' => 'Fuck off!']);
-        }
-
-        $commentMessage['comment'] = htmlspecialchars($commentMessage['comment']);
+        $commentMessage['comment'] = strip_tags($commentMessage['comment']);
         $request->request->set('commentType', $commentMessage);
         $blog = $this->getBlog($blog_id);
         $comment = new Comment();

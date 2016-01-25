@@ -1,11 +1,11 @@
 function postComment(commentForm, parentId) {
-    var comment = htmlspecialchars(commentForm.serializeArray()[0].value);
+    var comment = commentForm.serializeArray()[0].value;
     $.ajax({
         type: 'POST',
         url: $("#form-comment")[0].action,
         data: {commentType: {'comment': comment, 'parentId': parentId}},
         success: function (data) {
-            (data.error) ? alert(data.error) : appendComment(data);
+            appendComment(data);
         }
     });
 }
@@ -47,14 +47,6 @@ function appendCommentForm(form) {
     $(form).append(block);
 }
 
-function htmlspecialchars(string) {
-    return string.replace(/&/g, '&amp;').
-        replace(/"/g, '&quot;').
-        replace(/'/g, '&#039;').
-        replace(/</g, '&lt;').
-        replace(/>/g, '&gt;');
-}
-
 $(document).ready(function () {
 
     $("#form-comment").submit(function () {
@@ -80,7 +72,7 @@ $(document).ready(function () {
             postComment($(this).parents('form'), Number(id.match(/\d+/)));
             $('body').find('.last').remove();
         } else {
-            $(".last").notify('Заполните поле!', { position:"top center" }, 'error');
+            $(".last").notify('Заполните поле!', {position: "top center"}, 'error');
         }
     });
 
