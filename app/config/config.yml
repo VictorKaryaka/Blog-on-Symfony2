@@ -108,8 +108,8 @@ sonata_block:
     blocks:
         sonata.admin.block.admin_list:
             contexts: [admin]
+        sonata.admin.block.comments_list:
+            contexts: [comments]
 
-#sonata_admin:
-#    title:      Blog Admin Area
-#    templates:
-#        show:       BloggerBlogBundle:Admin:base_show.html.twig
+sonata_admin:
+    title:      Blog Admin Area

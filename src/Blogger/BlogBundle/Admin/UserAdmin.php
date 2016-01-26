@@ -18,13 +18,13 @@ class UserAdmin extends Admin
         $formMapper->add('username', 'text')
             ->add('email', 'text')
             ->add('enabled', 'checkbox', ['required' => false])
-//            ->add('password', 'repeated', [
-//                'type' => 'password',
-//                'invalid_message' => 'The password fields must match!',
-//                'first_options' => ['label' => 'password'],
-//                'second_options' => ['label' => 'Repeat Password']
-//            ])
-           ;
+            ->add('lastLogin', 'datetime')
+            ->add('plainPassword', 'repeated', [
+                'type' => 'password',
+                'invalid_message' => 'The password fields must match!',
+                'first_options' => ['label' => 'password'],
+                'second_options' => ['label' => 'Repeat Password'],
+            ]);
     }
 
     /**
@@ -37,13 +37,14 @@ class UserAdmin extends Admin
     }
 
     /**
-     * @param ListMapper $listMapper\
+     * @param ListMapper $listMapper \
      */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper->add('username')
             ->add('email')
             ->add('enabled')
+            ->add('lastLogin')
             ->add('_action', 'actions', [
                 'actions' => [
                     'show' => [],
@@ -53,16 +54,12 @@ class UserAdmin extends Admin
             ]);
     }
 
-//    /**
-//     * @param \Sonata\AdminBundle\Show\ShowMapper $showMapper
-//     * @return void
-//     */
-//    protected function configureShowField(ShowMapper $showMapper)
-//    {
-//        $showMapper
-//            ->add('id', null, array('label' => 'Идентификатор'))
-//            ->add('username', null, array('label' => 'Пользователь'))
-//            ->add('email', null, array('label' => 'E-mail'))
-//            ->add('enabled', null, array('label' => 'Активность'));
-//    }
+    protected function configureShowFields(ShowMapper $showMapper)
+    {
+        $showMapper
+            ->add('username')
+            ->add('email')
+            ->add('enabled')
+            ->add('lastLogin');
+    }
 }
