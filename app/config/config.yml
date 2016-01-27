@@ -113,3 +113,5 @@ sonata_block:
 
 sonata_admin:
     title:      Blog Admin Area
+    templates:
+        layout: BloggerBlogBundle:Admin:standard_layout.html.twig

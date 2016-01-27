@@ -8,6 +8,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Doctrine\ORM\EntityManager;
+use Sonata\AdminBundle\Route\RouteCollection;
 
 class CommentAdmin extends Admin
 {
@@ -45,7 +46,7 @@ class CommentAdmin extends Admin
 //            ])
             ->add('parentId', 'choice', [
                 'required' => false,
-//                'choices' => $em,
+                'choices' => [1,2,3,4,5],
             ])
             ->add('created', 'datetime')
             ->add('updated', 'datetime');
@@ -84,4 +85,8 @@ class CommentAdmin extends Admin
             ->add('updated');
     }
 
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        $collection->add('getComments', $this->getRouterIdParameter().'/getComments');
+    }
 }
