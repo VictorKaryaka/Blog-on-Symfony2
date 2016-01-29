@@ -9,12 +9,12 @@ class CRUDController extends Controller
 {
     public function getCommentsAction(Blog $blog)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $comments = $entityManager->getRepository('BloggerBlogBundle:Comment')->getCommentsForBlog($blog);
+        $comments = $this->getDoctrine()->getManager()
+            ->getRepository('BloggerBlogBundle:Comment')->getCommentsForBlog($blog);
         $commentsParse = [];
         $response = new JsonResponse();
 
-        if (isset($comments)) {
+        if (!empty($comments)) {
             foreach ($comments as $comment) {
                 array_push($commentsParse, [
                     'id' => $comment->getId(),

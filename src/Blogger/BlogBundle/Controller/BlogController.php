@@ -107,7 +107,7 @@ class BlogController extends Controller
      */
     private function getSortComments($comments)
     {
-        if (!is_array($comments)) {
+        if (empty($comments)) {
             return false;
         }
 

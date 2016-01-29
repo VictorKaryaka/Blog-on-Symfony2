@@ -47,4 +47,18 @@ class CommentRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @return array
+     */
+    public function getCommentsForFirstBlog()
+    {
+        $query = $this->_em->createQuery(
+            'SELECT blog.id FROM BloggerBlogBundle:Blog blog ORDER BY blog.id')->setMaxResults(1);
+        $blogId = $query->getResult()[0]['id'];
+        $query = $this->_em->createQuery(
+            'SELECT comment.id, comment.comment FROM BloggerBlogBundle:Comment comment WHERE comment.blog =' . $blogId);
+
+        return $query->getResult();
+    }
 }
