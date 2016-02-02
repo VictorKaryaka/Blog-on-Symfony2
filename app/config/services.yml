@@ -22,3 +22,9 @@ services:
         arguments: [~, Blogger\BlogBundle\Entity\Comment, BloggerBlogBundle:CRUD, @doctrine.orm.entity_manager]
         tags:
             - { name: sonata.admin, manager_type: orm, label: Comment }
+
+    blogs.category:
+        class: Blogger\BlogBundle\Admin\BlogAdmin
+        arguments: [~, Blogger\BlogBundle\Entity\Blog, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Blog }

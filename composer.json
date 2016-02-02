@@ -32,7 +32,8 @@
         "jms/serializer-bundle": "^1.1",
         "uecode/api-key-bundle": "dev-master",
         "sonata-project/admin-bundle": "dev-master",
-        "sonata-project/doctrine-orm-admin-bundle": "2.3.*"
+        "sonata-project/doctrine-orm-admin-bundle": "2.3.*",
+        "knplabs/knp-paginator-bundle": "^2.5"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

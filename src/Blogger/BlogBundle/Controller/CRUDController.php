@@ -7,22 +7,27 @@ use Blogger\BlogBundle\Entity\Blog;
 
 class CRUDController extends Controller
 {
+    /**
+     * @param Blog $blog
+     * @return JsonResponse
+     * @throws \Exception
+     */
     public function getCommentsAction(Blog $blog)
     {
         $comments = $this->getDoctrine()->getManager()
             ->getRepository('BloggerBlogBundle:Comment')->getCommentsForBlog($blog);
+
         $commentsParse = [];
-        $response = new JsonResponse();
 
         if (!empty($comments)) {
             foreach ($comments as $comment) {
-                array_push($commentsParse, [
+                $commentsParse[] = [
                     'id' => $comment->getId(),
                     'comment' => $comment->getComment()
-                ]);
+                ];
             }
         }
 
-        return $response->setData(['comments' => $commentsParse]);
+        return new JsonResponse(['comments' => $commentsParse]);
     }
 }

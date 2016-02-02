@@ -16,18 +16,14 @@ class BlogRepository extends EntityRepository
      * @param null $limit
      * @return array
      */
-    public function getLatestBlogs($limit = null)
+    public function getLatestBlogs()
     {
         $qb = $this->createQueryBuilder('b')
             ->select('b, c')
             ->leftJoin('b.comments', 'c')
             ->addOrderBy('b.created', 'DESC');
 
-        if (false === is_null($limit)) {
-            $qb->setMaxResults($limit);
-        }
-
-        return $qb->getQuery()->getResult();
+        return $qb;
     }
 
     /**

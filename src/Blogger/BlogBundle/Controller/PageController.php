@@ -2,6 +2,7 @@
 
 namespace Blogger\BlogBundle\Controller;
 
+use Blogger\BlogBundle\Entity\Config;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,12 +19,16 @@ class PageController extends Controller
      * @Template("BloggerBlogBundle:Page:index.html.twig")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->getLatestBlogs();
+        $paginator = $this->get('knp_paginator');
 
-        return ['blogs' => $blogs];
+        $pagination = $paginator->paginate($blogs->getQuery(), $request->query->getInt('page', 1),
+            $entityManager->find('BloggerBlogBundle:Config', 1)->getBlogsLimit());
+
+        return ['pagination' => $pagination];
     }
 
     /**

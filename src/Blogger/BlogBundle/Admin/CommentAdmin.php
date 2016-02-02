@@ -10,6 +10,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Doctrine\ORM\EntityManager;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class CommentAdmin extends Admin
 {
@@ -51,7 +52,14 @@ class CommentAdmin extends Admin
             }
         }
 
-        $formMapper->add('user', 'text')
+        $formMapper->add('user', HiddenType::class, [
+            'data' => $this->getConfigurationPool()
+                ->getContainer()
+                ->get('security.token_storage')
+                ->getToken()
+                ->getUser()
+                ->getUsername()
+        ])
             ->add('comment', 'textarea')
             ->add('blog', 'entity', [
                 'class' => 'Blogger\BlogBundle\Entity\Blog',

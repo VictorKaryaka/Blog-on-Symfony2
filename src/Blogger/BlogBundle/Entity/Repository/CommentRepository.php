@@ -2,6 +2,7 @@
 
 namespace Blogger\BlogBundle\Entity\Repository;
 
+use Blogger\BlogBundle\Entity\Blog;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -53,12 +54,67 @@ class CommentRepository extends EntityRepository
      */
     public function getCommentsForFirstBlog()
     {
-        $query = $this->_em->createQuery(
-            'SELECT blog.id FROM BloggerBlogBundle:Blog blog ORDER BY blog.id')->setMaxResults(1);
-        $blogId = $query->getResult()[0]['id'];
-        $query = $this->_em->createQuery(
-            'SELECT comment.id, comment.comment FROM BloggerBlogBundle:Comment comment WHERE comment.blog =' . $blogId);
+        $qb = $this->getEntityManager()->getRepository('BloggerBlogBundle:Blog')->createQueryBuilder('blog')
+            ->select('blog.id')
+            ->orderBy('blog.id')->setMaxResults(1);
 
-        return $query->getResult();
+        $blog = $qb->getQuery()->getResult();
+
+        $comments = $this->createQueryBuilder('comment')
+            ->select('comment.id', 'comment.comment')
+            ->where('comment.blog = :blogId')
+            ->setParameter('blogId', $blog[0]['id']);
+
+        return $comments->getQuery()->getResult();
+    }
+
+    /**
+     * @param $blogId
+     * @return array|bool
+     */
+    public function getSortComments($blogId)
+    {
+        $comments = $this->getCommentsForBlog($blogId);
+
+        if (empty($comments)) {
+            return false;
+        }
+
+        $sortComments = [];
+        $idKeyComments = [];
+        $parentIdKeyComments = [];
+
+        foreach ($comments as $comment) {
+            $idKeyComments[$comment->getId()] = $comment;
+
+            if ($comment->getParentId() != null) {
+                $parentIdKeyComments[$comment->getParentId()] = $comment;
+            }
+        }
+
+        foreach ($idKeyComments as $key => $commentEntity) {
+            if (!array_key_exists($key, $idKeyComments)) {
+                continue;
+            }
+
+            if (!array_key_exists($key, $parentIdKeyComments) && $commentEntity->getParentId() == null) {
+                $sortComments[] = $idKeyComments[$key];
+            } else {
+                $keyNestedComment = $key;
+
+                foreach ($parentIdKeyComments as $id => $entity) {
+                    if ($id == $keyNestedComment) {
+                        $sortComments[] = $idKeyComments[$keyNestedComment];
+                        unset($idKeyComments[$keyNestedComment]);
+                        $keyNestedComment = $entity->getId();
+                    }
+                }
+
+                $sortComments[] = $idKeyComments[$keyNestedComment];
+                unset($idKeyComments[$keyNestedComment]);
+            }
+        }
+
+        return $sortComments;
     }
 }

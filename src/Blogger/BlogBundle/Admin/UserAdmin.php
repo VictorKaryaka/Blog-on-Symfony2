@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Blogger\BlogBundle\Entity\User;
 
 class UserAdmin extends Admin
 {
@@ -54,6 +55,9 @@ class UserAdmin extends Admin
             ]);
     }
 
+    /**
+     * @param ShowMapper $showMapper
+     */
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
@@ -61,5 +65,14 @@ class UserAdmin extends Admin
             ->add('email')
             ->add('enabled')
             ->add('lastLogin');
+    }
+
+    /**
+     * @param mixed $object
+     * @return string
+     */
+    public function toString($object)
+    {
+        return $object instanceof User ? $object->getUsername() : 'User';
     }
 }
