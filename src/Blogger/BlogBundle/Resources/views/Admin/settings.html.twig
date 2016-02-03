@@ -1,0 +1,27 @@
+{% extends 'BloggerBlogBundle:Admin:standard_layout.html.twig' %}
+
+{% block content %}
+    <fieldset>
+        <legend>Latest blogs limit</legend>
+            <form method="post" name="set_limit" action="{{ url('blogger_blog_admin_settings') }}">
+                <input type="number" value="{{ current_blog_limit }}" name="blogs_limit" required>
+                <input type="submit" value="Set blogs limit">
+            </form>
+    </fieldset>
+    <br><br><br><br>
+    <fieldset>
+        <legend>Latest comments limit</legend>
+        <form method="post" name="set_limit" action="{{ url('blogger_blog_admin_settings') }}">
+            <input type="number" value="{{ current_comment_limit }}" name="comments_limit" required>
+            <input type="submit" value="Set comments limit">
+        </form>
+    </fieldset>
+    <br><br><br><br>
+    <fieldset>
+        <legend>Contact e-mail</legend>
+        <form method="post" name="set_limit" action="{{ url('blogger_blog_admin_settings') }}">
+            <input type="email" value="{{ contact_email }}" name="contact_email" required>
+            <input type="submit" value="Set contact e-mail">
+        </form>
+    </fieldset>
+{% endblock %}

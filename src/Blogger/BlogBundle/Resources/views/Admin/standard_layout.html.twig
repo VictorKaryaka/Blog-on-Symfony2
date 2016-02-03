@@ -214,14 +214,14 @@ file that was distributed with this source code.
                                 {% if app.user and is_granted('ROLE_SONATA_ADMIN') %}
                                     {{ knp_menu_render('sonata_admin_sidebar', {template: sonata_admin.adminPool.getTemplate('knp_menu_template')}) }}
                                 {% endif %}
-                                {{ knp_menu_render('BloggerBlogBundle:Builder:mainMenu') }}
+                                {{ knp_menu_render('BloggerBlogBundle:Builder:mainMenu', {template: sonata_admin.adminPool.getTemplate('knp_menu_template')})}}
                             {% endblock side_bar_nav %}
                             {% block side_bar_after_nav %}
-                                <p class="text-center small" style="border-top: 1px solid #444444; padding-top: 10px">
-                                    {% block side_bar_after_nav_content %}
-                                        <a href="https://sonata-project.org" rel="noreferrer" target="_blank">sonata project</a>
-                                    {% endblock %}
-                                </p>
+                                {#<p class="text-center small" style="border-top: 1px solid #444444; padding-top: 10px">#}
+                                    {#{% block side_bar_after_nav_content %}#}
+                                        {#<a href="https://sonata-project.org" rel="noreferrer" target="_blank">sonata project</a>#}
+                                    {#{% endblock %}#}
+                                {#</p>#}
                             {% endblock %}
                         {% endblock sonata_side_nav %}
                     </section>

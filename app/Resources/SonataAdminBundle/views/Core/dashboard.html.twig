@@ -15,12 +15,6 @@ file that was distributed with this source code.
 {% block breadcrumb %}{% endblock %}
 {% block content %}
 
-    <div class="row-fluid">
-        <div class="span6">
-            <a href="blogslimit" class="btn">Set Blogs Limit</a>
-        </div>
-    </div><br>
-
     {% set has_left = false %}
     {% for block in blocks.left %}
         {% if block.roles|length == 0 or is_granted(block.roles) %}

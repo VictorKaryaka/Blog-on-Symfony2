@@ -28,6 +28,11 @@ class Config
     protected $blogsLimit;
 
     /**
+     * @ORM\Column(type="integer", name="comments_limit")
+     */
+    protected $commentsLimit;
+
+    /**
      * @param mixed $contactEmail
      */
     public function setContactEmail($contactEmail)
@@ -65,5 +70,21 @@ class Config
     public function getBlogsLimit()
     {
         return $this->blogsLimit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCommentsLimit()
+    {
+        return $this->commentsLimit;
+    }
+
+    /**
+     * @param mixed $commentsLimit
+     */
+    public function setCommentsLimit($commentsLimit)
+    {
+        $this->commentsLimit = $commentsLimit;
     }
 }

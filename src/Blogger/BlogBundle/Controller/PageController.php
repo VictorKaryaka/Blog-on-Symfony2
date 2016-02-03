@@ -61,7 +61,7 @@ class PageController extends Controller
                 $message = \Swift_Message::newInstance()
                     ->setSubject('Contact enquiry from symblog')
                     ->setFrom('enquiries@symblog.co.uk')
-                    ->setTo($this->container->getParameter('blogger_blog.emails.contact_email'))
+                    ->setTo($this->getDoctrine()->getManager()->find('BloggerBlogBundle:Config', 1)->getContactEmail())
                     ->setBody($this->renderView('BloggerBlogBundle:Page:contactEmail.txt.twig', array(
                         'enquiry' => $enquiry)));
                 $this->get('mailer')->send($message);
@@ -86,7 +86,7 @@ class PageController extends Controller
         $entityManager = $this->getDoctrine()->getManager();
         $tags = $entityManager->getRepository('BloggerBlogBundle:Blog')->getTags();
         $tagWeights = $entityManager->getRepository('BloggerBlogBundle:Blog')->getTagWeights($tags);
-        $commentLimit = $this->container->getParameter('blogger_blog.comments.latest_comment_limit');
+        $commentLimit = $entityManager->find('BloggerBlogBundle:Config', 1)->getCommentsLimit();
         $latestComments = $entityManager->getRepository('BloggerBlogBundle:Comment')->getLatestComments($commentLimit);
 
         return [
