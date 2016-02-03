@@ -11,20 +11,20 @@ services:
         arguments: [@doctrine.orm.entity_manager]
         public: false
 
-    admin.category:
+    users.category:
         class: Blogger\BlogBundle\Admin\UserAdmin
         arguments: [~, Blogger\BlogBundle\Entity\User, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: User }
+            - { name: sonata.admin, group: Blog admin, manager_type: orm, label: User }
 
     comments.category:
         class: Blogger\BlogBundle\Admin\CommentAdmin
         arguments: [~, Blogger\BlogBundle\Entity\Comment, BloggerBlogBundle:CRUD, @doctrine.orm.entity_manager]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Comment }
+            - { name: sonata.admin, group: Blog admin, manager_type: orm, label: Comment }
 
     blogs.category:
         class: Blogger\BlogBundle\Admin\BlogAdmin
         arguments: [~, Blogger\BlogBundle\Entity\Blog, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, label: Blog }
+            - { name: sonata.admin, group: Blog admin, manager_type: orm, label: Blog }

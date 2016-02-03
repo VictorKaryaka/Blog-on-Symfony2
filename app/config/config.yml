@@ -114,6 +114,9 @@ sonata_admin:
     title:      Blog Admin Area
     templates:
         layout: BloggerBlogBundle:Admin:standard_layout.html.twig
+    dashboard:
+        blocks:
+            - { position: left, type: sonata.admin.block.admin_list }
 
 knp_paginator:
     page_range: 3                      # default page range used in pagination control

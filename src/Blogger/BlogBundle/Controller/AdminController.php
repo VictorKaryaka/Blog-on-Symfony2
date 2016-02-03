@@ -3,6 +3,7 @@
 namespace Blogger\BlogBundle\Controller;
 
 use Blogger\BlogBundle\Entity\Config;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Sonata\AdminBundle\Controller\CoreController;
@@ -51,24 +52,16 @@ class AdminController extends CoreController
      * @param $config
      * @return array|bool
      */
-    private function setBlogLimit(Request $request, $entityManager, $config)
+    private function setBlogLimit(Request $request, ObjectManager $entityManager, Config $config)
     {
         $blogsLimit = $request->request->get('blogs_limit');
 
-        if (!empty($blogsLimit)) {
-            if (is_numeric($blogsLimit)) {
-                $config->setBlogsLimit($blogsLimit);
-                $entityManager->persist($config);
-                $entityManager->flush();
+        if (!empty($blogsLimit) && is_numeric($blogsLimit)) {
+            $config->setBlogsLimit($blogsLimit);
 
-                return [
-                    'current_blog_limit' => $blogsLimit,
-                    'current_comment_limit' => $config->getCommentsLimit(),
-                    'contact_email' => $config->getContactEmail()
-                ];
-            } else {
-                return false;
-            }
+            return $this->updateEntity($config, $entityManager);
+        } else {
+            return false;
         }
     }
 
@@ -78,24 +71,16 @@ class AdminController extends CoreController
      * @param $config
      * @return array|bool
      */
-    private function setCommentLimit(Request $request, $entityManager, $config)
+    private function setCommentLimit(Request $request, ObjectManager $entityManager, Config $config)
     {
         $commentsLimit = $request->request->get('comments_limit');
 
-        if (!empty($commentsLimit)) {
-            if (is_numeric($commentsLimit)) {
-                $config->setCommentsLimit($commentsLimit);
-                $entityManager->persist($config);
-                $entityManager->flush();
+        if (!empty($commentsLimit) && is_numeric($commentsLimit)) {
+            $config->setCommentsLimit($commentsLimit);
 
-                return [
-                    'current_blog_limit' => $config->getBlogsLimit(),
-                    'current_comment_limit' => $commentsLimit,
-                    'contact_email' => $config->getContactEmail()
-                ];
-            } else {
-                return false;
-            }
+            return $this->updateEntity($config, $entityManager);
+        } else {
+            return false;
         }
     }
 
@@ -105,24 +90,33 @@ class AdminController extends CoreController
      * @param $config
      * @return array|bool
      */
-    private function setContactEmail(Request $request, $entityManager, $config)
+    private function setContactEmail(Request $request, ObjectManager $entityManager, Config $config)
     {
         $contactEmail = $request->request->get('contact_email');
 
-        if (!empty($contactEmail)) {
-            if (is_string($contactEmail)) {
-                $config->setContactEmail($contactEmail);
-                $entityManager->persist($config);
-                $entityManager->flush();
+        if (!empty($contactEmail) && is_string($contactEmail)) {
+            $config->setContactEmail($contactEmail);
 
-                return [
-                    'current_blog_limit' => $config->getBlogsLimit(),
-                    'current_comment_limit' => $config->getCommentsLimit(),
-                    'contact_email' => $contactEmail
-                ];
-            } else {
-                return false;
-            }
+            return $this->updateEntity($config, $entityManager);
+        } else {
+            return false;
         }
+    }
+
+    /**
+     * @param $config
+     * @param $entityManager
+     * @return array
+     */
+    private function updateEntity(Config $config, ObjectManager $entityManager)
+    {
+        $entityManager->persist($config);
+        $entityManager->flush();
+
+        return [
+            'current_blog_limit' => $config->getBlogsLimit(),
+            'current_comment_limit' => $config->getCommentsLimit(),
+            'contact_email' => $config->getContactEmail()
+        ];
     }
 }

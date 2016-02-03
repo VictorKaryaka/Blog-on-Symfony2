@@ -259,7 +259,7 @@ file that was distributed with this source code.
                                                         {% endfor %}
                                                     </div>
                                                 {% endif %}
-                                                
+
                                                 {% block sonata_admin_content_actions_wrappers %}
                                                     {% if _actions|replace({ '<li>': '', '</li>': '' })|trim is not empty %}
                                                         <ul class="nav navbar-nav navbar-right">
@@ -290,7 +290,6 @@ file that was distributed with this source code.
 
                     <section class="content">
                         {% block sonata_admin_content %}
-
                             {% block notice %}
                                 {% include 'SonataCoreBundle:FlashMessage:render.html.twig' %}
                             {% endblock notice %}
