@@ -21,14 +21,18 @@ class PageController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->getLatestBlogs();
-        $paginator = $this->get('knp_paginator');
+        return $this->getPaginationBlog($request);
+    }
 
-        $pagination = $paginator->paginate($blogs->getQuery(), $request->query->getInt('page', 1),
-            $entityManager->find('BloggerBlogBundle:Config', 1)->getBlogsLimit());
-
-        return ['pagination' => $pagination];
+    /**
+     * @Route("/tag/{tag}", defaults={"tag" = ""}, name = "BloggerBlogBundle_tagname")
+     * @Method("GET")
+     * @Template("BloggerBlogBundle:Page:index.html.twig")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tagAction(Request $request, $tag)
+    {
+        return $this->getPaginationBlog($request, $tag);
     }
 
     /**
@@ -93,5 +97,27 @@ class PageController extends Controller
             'latestComments' => $latestComments,
             'tags' => $tagWeights
         ];
+    }
+
+    /**
+     * @param Request $request
+     * @param null $tag
+     * @return array
+     */
+    private function getPaginationBlog(Request $request, $tag = null)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $paginator = $this->get('knp_paginator');
+
+        if (empty($tag)) {
+            $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->getLatestBlogs();
+        } else {
+            $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->getBlogsByTag($tag);
+        }
+
+        $pagination = $paginator->paginate($blogs->getQuery(), $request->query->getInt('page', 1),
+            $entityManager->find('BloggerBlogBundle:Config', 1)->getBlogsLimit());
+
+        return ['pagination' => $pagination];
     }
 }

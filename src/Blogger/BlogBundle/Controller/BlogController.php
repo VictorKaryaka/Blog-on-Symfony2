@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Blogger\BlogBundle\Form\BlogType;
+use Blogger\BlogBundle\Form\BlogEditType;
 
 /**
  * Blog controller.
@@ -27,6 +28,7 @@ class BlogController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneById($id);
+        $form = $this->createForm(new BlogEditType(), new Blog());
 
         if (!$blog) {
             return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_error', ['error' => 'Blog not found!']));
@@ -36,6 +38,7 @@ class BlogController extends Controller
             'blog' => $blog,
             'comments' => $entityManager
                 ->getRepository('BloggerBlogBundle:Comment')->getSortComments($blog->getId()),
+            'form' => $form,
         ];
     }
 
@@ -96,5 +99,61 @@ class BlogController extends Controller
     public function errorAction($error)
     {
         return ['error' => $error];
+    }
+
+    /**
+     * @Route("/delete/{id}", name="BloggerBlogBundle_blog_delete")
+     * @Method("GET")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteBlogAction($id)
+    {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $blog = $entityManager->find('BloggerBlogBundle:Blog', $id);
+            $entityManager->remove($blog);
+            $entityManager->flush();
+        }
+
+        return $this->redirect($this->generateUrl("BloggerBlogBundle_homepage"));
+    }
+
+    /**
+     * @Route("/edit/{id}", name="BloggerBlogBundle_blog_edit")
+     * @Method("POST")
+     * @param Request $request
+     * @param $id
+     */
+    public function editBlogAction(Request $request, $id)
+    {
+        $titleChange = $request->request->get('blogEditType')['title'];
+        $blogChange = $request->request->get('blogEditType')['blog'];
+        $tagsChange = $request->request->get('blogEditType')['tags'];
+
+        if ($request->request->count() > 0) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $blog = $entityManager->find('BloggerBlogBundle:Blog', $id);
+
+            if (!empty($titleChange)) {
+                $blog->setTitle($titleChange);
+            }
+
+            if (!empty($blogChange)) {
+                $blog->setBlog($blogChange);
+            }
+
+            if (!empty($tagsChange)) {
+                $blog->setTags($tagsChange);
+            }
+
+            $entityManager->merge($blog);
+            $entityManager->flush();
+        }
+
+        return $this->redirect($this->generateUrl("BloggerBlogBundle_blog_show", [
+            'id' => $blog->getId(),
+            'slug' => $blog->getTitle()
+        ]));
     }
 }

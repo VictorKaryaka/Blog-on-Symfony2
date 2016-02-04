@@ -31,6 +31,11 @@ class Image
     protected $name;
 
     /**
+     * @ORM\Column(type="boolean", options={"default" = 0})
+     */
+    protected $main;
+
+    /**
      * Get id
      *
      * @return integer
@@ -86,5 +91,21 @@ class Image
     public function getBlog()
     {
         return $this->blog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMain()
+    {
+        return $this->main;
+    }
+
+    /**
+     * @param mixed $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
     }
 }

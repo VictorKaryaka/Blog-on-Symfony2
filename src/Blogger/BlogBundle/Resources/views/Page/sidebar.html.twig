@@ -4,7 +4,9 @@
     </header>
     <p class="tags">
         {% for tag, weight in tags %}
-        <span class="weight-{{ weight }}">{{ tag }}</span>
+        <a href="{{ url('BloggerBlogBundle_tagname') }}/{{ tag }}">
+            <span class="weight-{{ weight }}">{{ tag }}</span>
+        </a>
         {% else %}
 
     <p>There are no tags</p>

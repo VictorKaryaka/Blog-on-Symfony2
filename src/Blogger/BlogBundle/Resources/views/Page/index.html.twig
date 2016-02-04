@@ -20,7 +20,11 @@
             </header>
 
             {% if blog.getImage.get(0) is not empty %}
-                <img src="{{ asset(['images/', blog.getImage.get(0).getName]|join) }}"/>
+                {% for image in blog.getImage %}
+                    {% if image.getMain == 1 %}
+                        <img src="{{ asset(['images/', image.getName]|join) }}"/>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
 
             <div class="snippet">

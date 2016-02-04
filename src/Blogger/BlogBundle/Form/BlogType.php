@@ -16,14 +16,14 @@ class BlogType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('blog', 'textarea')
+            ->add('blog')
             ->add('tags')
             ->add('uploadedFiles', 'file', [
                 'required' => false,
                 'multiple' => true,
                 'label' => 'Select image',
                 'data_class' => null,
-                'empty_data' => null
+                'empty_data' => 0
             ]);
     }
 

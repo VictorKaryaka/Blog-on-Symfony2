@@ -21,9 +21,22 @@
     </article>
 
     <section class="comments" id="comments">
+        {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {% if app.security.getToken().getUser().getUsername() == blog.author %}
+                <div align="center">
+                    <input id="but-edit" type="button" value="Edit">
+                    <input id="but-image" type="button" value="Add image">
+                    <a href="{{ path('BloggerBlogBundle_blog_delete', {'id': blog.id}) }}">
+                        <input id="but-delete" type="button" value="Delete">
+                    </a>
+                </div>
+                {% include 'BloggerBlogBundle:Blog:edit.html.twig' with { 'form': form } %}
+            {% endif %}
+        {% endif %}
+
         <section class="previous-comments">
             <h3>Comments</h3>
-            {% include 'BloggerBlogBundle:Comment:index.html.twig' with { 'comments': comments } %}
+            {% include 'BloggerBlogBundle:Comment:index.html.twig' with { 'comments': comments, 'id': blog.id } %}
         </section>
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <h3>Add Comment</h3>
