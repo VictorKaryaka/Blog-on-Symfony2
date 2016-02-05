@@ -42,11 +42,32 @@ form.blogger textarea {
 }
 
 form.blogger input[type="submit"] {
-    margin-left: 110px;
-    width: 508px;
-    line-height: 26px;
-    font-size: 20px;
-    min-height: 26px;
+    /*margin-left: 300px;*/
+    /*line-height: 26px;*/
+    /*font-size: 20px;*/
+    /*min-height: 26px;*/
+
+    margin-left: 300px;
+    text-decoration: none;
+    text-align: center;
+    padding: 8px 15px;
+    border: solid 1px #68ee11;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    font: 11px Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #E5FFFF;
+    background-color: #5cb211;
+    background-image: -moz-linear-gradient(top, #5cb211 0%, #266308 100%);
+    background-image: -webkit-linear-gradient(top, #5cb211 0%, #266308 100%);
+    background-image: -o-linear-gradient(top, #5cb211 0%, #266308 100%);
+    background-image: -ms-linear-gradient(top, #5cb211 0%, #266308 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1982A5', endColorstr='#1982A5', GradientType=0);
+    background-image: linear-gradient(top, #5cb211 0%, #266308 100%);
+    -webkit-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    -moz-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
 }
 
 form.blogger ul li {
@@ -216,6 +237,7 @@ form.blogger ul li {
 }
 
 #but-image {
+    opacity: 1;
     margin: 15px 7px;
     text-decoration: none;
     text-align: center;
@@ -234,6 +256,30 @@ form.blogger ul li {
     background-image: -ms-linear-gradient(top, #4b76ee 0%, #1f337d 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1982A5', endColorstr='#1982A5', GradientType=0);
     background-image: linear-gradient(top, #4b76ee 0%, #1f337d 100%);
+    -webkit-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    -moz-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+    box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+}
+
+#but-image-delete {
+    margin: 15px 7px;
+    text-decoration: none;
+    text-align: center;
+    padding: 8px 15px;
+    border: solid 1px #ee8017;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    font: 11px Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #E5FFFF;
+    background-color: #ee8017;
+    background-image: -moz-linear-gradient(top, #ee8017 0%, #7d3c07 100%);
+    background-image: -webkit-linear-gradient(top, #ee8017 0%, #7d3c07 100%);
+    background-image: -o-linear-gradient(top, #ee8017 0%, #7d3c07 100%);
+    background-image: -ms-linear-gradient(top, #ee8017 0%, #7d3c07 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1982A5', endColorstr='#1982A5', GradientType=0);
+    background-image: linear-gradient(top, #ee8017 0%, #7d3c07 100%);
     -webkit-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
     -moz-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
     box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
@@ -261,4 +307,16 @@ form.blogger ul li {
     -webkit-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
     -moz-box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
     box-shadow: 0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+}
+
+#update-blog {
+    margin: 20px 0px 20px 0px;
+}
+
+#image-action {
+    background-color: grey;
+}
+
+#blogEditType_uploadedFiles {
+    margin-top: 10px;
 }

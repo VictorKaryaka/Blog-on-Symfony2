@@ -392,6 +392,7 @@ class Blog
                     $image = new Image();
                     $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
                     $image->setName($imageName);
+                    $image->setMain(0);
                     $imageDir = __DIR__ . '/../../../../web/images';
                     $uploadedFile->move($imageDir, $imageName);
                     $this->getImage()->add($image);

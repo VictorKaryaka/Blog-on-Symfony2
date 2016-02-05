@@ -16,7 +16,14 @@ class BlogEditType extends AbstractType
         $builder
             ->add('title', 'text', ['required' => false])
             ->add('blog', 'textarea', ['required' => false])
-            ->add('tags', 'text', ['required' => false]);
+            ->add('tags', 'text', ['required' => false])
+            ->add('uploadedFiles', 'file', [
+                'required' => false,
+                'multiple' => true,
+                'label' => 'Add image',
+                'data_class' => null,
+                'empty_data' => 0
+            ]);
     }
 
     /**

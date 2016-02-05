@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Blogger\BlogBundle\Form\BlogType;
 use Blogger\BlogBundle\Form\BlogEditType;
@@ -52,7 +53,7 @@ class BlogController extends Controller
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $blog = new Blog();
-            $image =new Image();
+            $image = new Image();
             $form = $this->createForm(new BlogType($image), $blog);
 
             return ['form' => $form->createView()];
@@ -125,15 +126,15 @@ class BlogController extends Controller
      * @param Request $request
      * @param $id
      */
-    public function editBlogAction(Request $request, $id)
+    public function updateBlogAction(Request $request, $id)
     {
-        $titleChange = $request->request->get('blogEditType')['title'];
-        $blogChange = $request->request->get('blogEditType')['blog'];
-        $tagsChange = $request->request->get('blogEditType')['tags'];
-
         if ($request->request->count() > 0) {
             $entityManager = $this->getDoctrine()->getManager();
             $blog = $entityManager->find('BloggerBlogBundle:Blog', $id);
+            $titleChange = $request->request->get('blogEditType')['title'];
+            $blogChange = $request->request->get('blogEditType')['blog'];
+            $tagsChange = $request->request->get('blogEditType')['tags'];
+            $image = $request->files->get('blogEditType')['uploadedFiles'];
 
             if (!empty($titleChange)) {
                 $blog->setTitle($titleChange);
@@ -147,13 +148,50 @@ class BlogController extends Controller
                 $blog->setTags($tagsChange);
             }
 
+            if (!empty($image)) {
+                $blog->setUploadedFiles($image);
+            }
+
             $entityManager->merge($blog);
             $entityManager->flush();
         }
 
         return $this->redirect($this->generateUrl("BloggerBlogBundle_blog_show", [
             'id' => $blog->getId(),
-            'slug' => $blog->getTitle()
+            'slug' => $blog->getTitle(),
         ]));
+    }
+
+    /**
+     * @Route("{id}/setTitleImage/{name}", name="BloggerBlogBundle_blog_setTitleImage")
+     * @param $id
+     * @param $name
+     * @return JsonResponse
+     */
+    public function setTitleImageAction($id, $name)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $image = $entityManager->getRepository('BloggerBlogBundle:Image')->getImageByName($id, $name)[0];
+        $image->setMain(true);
+        $entityManager->merge($image);
+        $entityManager->flush();
+
+        return new JsonResponse(['notice' => 'success']);
+    }
+
+    /**
+     * @Route("{id}/deleteImage/{name}", name="BloggerBlogBundle_blog_deleteImage")
+     * @param $id
+     * @param $name
+     * @return JsonResponse
+     */
+    public function deleteImage($name)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $image = $entityManager->getRepository('BloggerBlogBundle:Image')->getImageByName(null, $name)[0];
+        $entityManager->remove($image);
+        $entityManager->flush();
+
+        return new JsonResponse(['notice' => 'success']);
     }
 }
