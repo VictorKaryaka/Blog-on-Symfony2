@@ -2,6 +2,7 @@
 
 namespace Blogger\BlogBundle\Controller;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -80,8 +81,10 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("{id}/edit/{blog_id}", name = "BloggerBlogBundle_comment_edit", requirements={"blog_id": "\d+"})
+     * @Route("{id}/comment/edit/{blog_id}", name = "BloggerBlogBundle_comment_edit", requirements={"blog_id": "\d+"})
      * @Method("POST")
+     * @param Request $request
+     * @param $blog_id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function editComment(Request $request, $blog_id)
@@ -90,12 +93,39 @@ class CommentController extends Controller
             $entityManager = $this->getDoctrine()->getManager();
             $editComment = $request->request->get('comment');
             $comment = $entityManager->find('BloggerBlogBundle:Comment', $blog_id);
-            $comment->setComment($editComment);
-            $entityManager->merge($comment);
-            $entityManager->flush();
 
-            return new JsonResponse(['notice' => 'success']);
+            return $this->updateComment($entityManager, $comment, $editComment);
         }
+    }
+
+    /**
+     * @Route("{id}/comment/delete/{comment_id}", name = "BloggerBlogBundle_comment_delete", requirements={"comment_id": "\d+"})
+     * @param $comment_id
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function deleteComment($comment_id)
+    {
+        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $comment = $entityManager->find('BloggerBlogBundle:Comment', $comment_id);
+
+            return $this->updateComment($entityManager, $comment, 'This comment is deleted!');
+        }
+    }
+
+    /**
+     * @param ObjectManager $entityManager
+     * @param Comment $comment
+     * @param $message
+     * @return JsonResponse
+     */
+    private function updateComment(ObjectManager $entityManager, Comment $comment, $message)
+    {
+        $comment->setComment($message);
+        $entityManager->merge($comment);
+        $entityManager->flush();
+
+        return new JsonResponse(['notice' => 'success']);
     }
 
     /**

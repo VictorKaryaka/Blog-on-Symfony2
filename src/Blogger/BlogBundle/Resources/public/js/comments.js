@@ -19,12 +19,29 @@ function editComment(commentForm, parentId) {
     var comment = commentForm.serializeArray()[0].value;
     $.ajax({
         type: 'POST',
-        url: 'edit/' + parentId,
+        url: 'comment/edit/' + parentId,
         data: {'comment': comment},
         success: function (data) {
             if (data.notice == 'success') {
                 $.unblockUI();
                 $('#comment-' + parentId).find('#comment').text(comment);
+            }
+        }
+    }).always(function () {
+        $.unblockUI();
+    });
+}
+
+function deleteComment(id) {
+
+    blockUI();
+    $.ajax({
+        url: 'comment/delete/' + id,
+        success: function(data) {
+            $.unblockUI();
+            if (data.notice == 'success') {
+                $('#comment-' + id).find('#comment').text('This comment is deleted!');
+                $('#comment-' + id).find('#group-button').remove();
             }
         }
     }).always(function () {
@@ -41,10 +58,10 @@ function appendComment(data) {
             'style="margin-left: ' + margin + 'px">' +
             '<header><p id="comment-header"><span class="highlight">' + data.user + '</span> ' +
             'оставил комментарий ' + data.created.date +
-            '</p></header><p id="comment">' + data.comment + '</p>' +
+            '</p></header><p id="comment">' + data.comment + '</p> <div id="group-button">' +
             '<input class="button-add" id="but-comment" type="button" value="Comment">' +
             '<input class="button-edit" id="but-edit" type="button" value="Edit">' +
-            '<input class="button-delete" id="but-delete" type="button" value="Delete">' +
+            '<input class="button-delete" id="but-delete" type="button" value="Delete"></div>' +
             '</article>';
     };
 
@@ -137,6 +154,13 @@ $(document).ready(function () {
 
         if (editMode == false) {
             $('.close_hint').parents('.last').remove();
+        }
+    });
+
+    $('body').on('click', '#but-delete', function () {
+        if (confirm('Do you want delete this comment?')) {
+            var id = $(this).parents('article').attr('id');
+            deleteComment(Number(id.match(/\d+/)));
         }
     });
 });
