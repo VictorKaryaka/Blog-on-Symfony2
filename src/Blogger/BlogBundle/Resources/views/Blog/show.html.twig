@@ -26,11 +26,11 @@
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {% if app.security.getToken().getUser().getUsername() == blog.author %}
                 <div align="center">
-                    <input id="but-edit" type="button" value="Edit page">
-                    <input id="but-image" type="button" value="Select title image">
+                    <input class="button-add" id="but-edit" type="button" value="Edit page">
+                    <input class="button-edit" id="but-image" type="button" value="Select title image">
                     <input id="but-image-delete" type="button" value="Delete image">
                     <a href="{{ path('BloggerBlogBundle_blog_delete', {'id': blog.id}) }}">
-                        <input id="but-delete" type="button" value="Delete blog"
+                        <input class="button-delete" id="but-delete" type="button" value="Delete blog"
                                onclick="return window.confirm('Do you want delete blog?')">
                     </a>
                 </div>

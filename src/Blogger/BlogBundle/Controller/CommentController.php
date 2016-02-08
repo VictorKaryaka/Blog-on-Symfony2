@@ -80,6 +80,25 @@ class CommentController extends Controller
     }
 
     /**
+     * @Route("{id}/edit/{blog_id}", name = "BloggerBlogBundle_comment_edit", requirements={"blog_id": "\d+"})
+     * @Method("POST")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function editComment(Request $request, $blog_id)
+    {
+        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $editComment = $request->request->get('comment');
+            $comment = $entityManager->find('BloggerBlogBundle:Comment', $blog_id);
+            $comment->setComment($editComment);
+            $entityManager->merge($comment);
+            $entityManager->flush();
+
+            return new JsonResponse(['notice' => 'success']);
+        }
+    }
+
+    /**
      * @param $blog_id
      * @return \Blogger\BlogBundle\Entity\Blog|object
      */

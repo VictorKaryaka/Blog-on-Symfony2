@@ -16,7 +16,9 @@
         <p id="comment">{{ comment.comment }}</p>
 
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <input class="but-comment" type="button" value="Comment">
+            <input class="button-add" id="but-comment" type="button" value="Comment">
+            <input class="button-edit" id="but-edit" type="button" value="Edit">
+            <input class="button-delete" id="but-delete" type="button" value="Delete">
         {% endif %}
     </article>
 {% else %}
