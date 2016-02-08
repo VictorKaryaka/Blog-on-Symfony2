@@ -128,13 +128,13 @@ class BlogController extends Controller
      */
     public function updateBlogAction(Request $request, $id)
     {
-        if ($request->request->count() > 0) {
+        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $blog = $entityManager->find('BloggerBlogBundle:Blog', $id);
             $titleChange = $request->request->get('blogEditType')['title'];
             $blogChange = $request->request->get('blogEditType')['blog'];
             $tagsChange = $request->request->get('blogEditType')['tags'];
-            $image = $request->files->get('blogEditType')['uploadedFiles'];
+            $image = $request->files;
 
             if (!empty($titleChange)) {
                 $blog->setTitle($titleChange);
@@ -154,12 +154,18 @@ class BlogController extends Controller
 
             $entityManager->merge($blog);
             $entityManager->flush();
-        }
+            $blogImages = $blog->getImage()->getValues();
+            $images = [];
 
-        return $this->redirect($this->generateUrl("BloggerBlogBundle_blog_show", [
-            'id' => $blog->getId(),
-            'slug' => $blog->getTitle(),
-        ]));
+            foreach ($blogImages as $image) {
+                $images[] = $image->getName();
+            }
+
+            return new JsonResponse([
+                'notice' => 'success',
+                'images' => $images
+            ]);
+        }
     }
 
     /**
@@ -170,13 +176,15 @@ class BlogController extends Controller
      */
     public function setTitleImageAction($id, $name)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $image = $entityManager->getRepository('BloggerBlogBundle:Image')->getImageByName($id, $name)[0];
-        $image->setMain(true);
-        $entityManager->merge($image);
-        $entityManager->flush();
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $image = $entityManager->getRepository('BloggerBlogBundle:Image')->getImageByName($id, $name)[0];
+            $image->setMain(true);
+            $entityManager->merge($image);
+            $entityManager->flush();
 
-        return new JsonResponse(['notice' => 'success']);
+            return new JsonResponse(['notice' => 'success']);
+        }
     }
 
     /**
@@ -187,11 +195,13 @@ class BlogController extends Controller
      */
     public function deleteImage($name)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $image = $entityManager->getRepository('BloggerBlogBundle:Image')->getImageByName(null, $name)[0];
-        $entityManager->remove($image);
-        $entityManager->flush();
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $image = $entityManager->getRepository('BloggerBlogBundle:Image')->getImageByName(null, $name)[0];
+            $entityManager->remove($image);
+            $entityManager->flush();
 
-        return new JsonResponse(['notice' => 'success']);
+            return new JsonResponse(['notice' => 'success']);
+        }
     }
 }
