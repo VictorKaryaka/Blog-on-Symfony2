@@ -189,7 +189,7 @@ class BlogController extends Controller
      * @param $name
      * @return JsonResponse
      */
-    public function deleteImage($name)
+    public function deleteImageAction($name)
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $entityManager = $this->getDoctrine()->getManager();

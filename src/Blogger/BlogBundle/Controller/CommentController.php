@@ -86,7 +86,7 @@ class CommentController extends Controller
      * @param $blog_id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function editComment(Request $request, $blog_id)
+    public function editCommentAction(Request $request, $blog_id)
     {
         if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -102,7 +102,7 @@ class CommentController extends Controller
      * @param $comment_id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function deleteComment($comment_id)
+    public function deleteCommentAction($comment_id)
     {
         if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
             $entityManager = $this->getDoctrine()->getManager();
