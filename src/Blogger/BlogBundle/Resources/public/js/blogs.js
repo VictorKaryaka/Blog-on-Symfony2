@@ -61,14 +61,14 @@ function editBlog(submitForm, files) {
         success: function (data) {
             if (data.notice == 'success') {
                 $.unblockUI();
-                $('#blog-title').text(submitParams[0].value);
-                $('#blog-content').text(submitParams[1].value);
-                $('#blog-tag').text(submitParams[2].value);
+                $('#blog-title').text(data.title);
+                $('#blog-content').text(data.blog);
+                $('#blog-tag').text(data.tags);
                 $('.blog').find('.large').remove();
                 $.each(data.images, function (key, value) {
                     $('.blog').append('<img class="large"' +
-                        'src="/images/' + value + '"' +
-                        'alt="image not found">');
+                    'src="/images/' + value + '"' +
+                    'alt="image not found">');
                 });
             }
         }
@@ -129,8 +129,8 @@ $(document).ready(function () {
     $('#but-edit').click(function () {
         if ($('#update-blog').is(':hidden')) {
             $('#update-blog').show('slow');
-            $('#blogEditType_title').val($('#blog-content').text());
-            $('#blogEditType_blog').val($('#blog-title').text());
+            $('#blogEditType_title').val($('#blog-title').text());
+            $('#blogEditType_blog').val($('#blog-content').text());
             $('#blogEditType_tags').val($('#blog-tag').text().replace('Tags: ', ''));
         } else {
             $('#update-blog').hide('slow');
@@ -138,12 +138,12 @@ $(document).ready(function () {
     });
 
     $('#but-image').click(function () {
-        (!setTitleImageMode) ? setTitleImageMode = true : setTitleImageMode = false;
+        setTitleImageMode = (!setTitleImageMode) ? true : false;
         buttonAction(setTitleImageMode, $(this), 'Кликните, чтобы выбрать изображение для заголовка');
     });
 
     $('#but-image-delete').click(function () {
-        (!deleteImageMode) ? deleteImageMode = true : deleteImageMode = false;
+        deleteImageMode = (!deleteImageMode) ? true : false;
         buttonAction(deleteImageMode, $(this), 'Кликните, чтобы удалить изображение');
     });
 
@@ -169,6 +169,7 @@ $(document).ready(function () {
 
     $('#update-blog').submit(function () {
         event.preventDefault();
+        $('#update-blog').hide('slow');
         editBlog($(this), files);
     });
 });

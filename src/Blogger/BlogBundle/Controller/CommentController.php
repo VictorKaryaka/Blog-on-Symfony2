@@ -27,9 +27,8 @@ class CommentController extends Controller
      */
     public function newFormCommentAction($blog_id)
     {
-        $blog = $this->getBlog($blog_id);
         $comment = new Comment();
-        $comment->setBlog($blog);
+        $comment->setBlog($this->getBlog($blog_id));
         $form = $this->createForm(new CommentType(), $comment);
 
         return [
@@ -91,7 +90,7 @@ class CommentController extends Controller
     {
         if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $editComment = $request->request->get('comment');
+            $editComment = strip_tags($request->request->get('comment'));
             $comment = $entityManager->find('BloggerBlogBundle:Comment', $blog_id);
 
             return $this->updateComment($entityManager, $comment, $editComment);
@@ -125,7 +124,10 @@ class CommentController extends Controller
         $entityManager->merge($comment);
         $entityManager->flush();
 
-        return new JsonResponse(['notice' => 'success']);
+        return new JsonResponse([
+            'notice' => 'success',
+            'comment' => $comment->getComment(),
+        ]);
     }
 
     /**

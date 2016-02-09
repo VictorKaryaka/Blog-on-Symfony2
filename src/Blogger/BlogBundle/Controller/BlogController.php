@@ -52,9 +52,7 @@ class BlogController extends Controller
     public function newBlogAction()
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $blog = new Blog();
-            $image = new Image();
-            $form = $this->createForm(new BlogType($image), $blog);
+            $form = $this->createForm(new BlogType(new Image()), new Blog());
 
             return ['form' => $form->createView()];
         } else {
@@ -125,45 +123,44 @@ class BlogController extends Controller
      * @Method("POST")
      * @param Request $request
      * @param $id
+     * @return JsonResponse
      */
     public function updateBlogAction(Request $request, $id)
     {
         if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $blog = $entityManager->find('BloggerBlogBundle:Blog', $id);
-            $titleChange = $request->request->get('blogEditType')['title'];
-            $blogChange = $request->request->get('blogEditType')['blog'];
-            $tagsChange = $request->request->get('blogEditType')['tags'];
-            $image = $request->files;
 
-            if (!empty($titleChange)) {
-                $blog->setTitle($titleChange);
+            if (!empty($request->request->get('blogEditType')['title'])) {
+                $blog->setTitle(strip_tags($request->request->get('blogEditType')['title']));
             }
 
-            if (!empty($blogChange)) {
-                $blog->setBlog($blogChange);
+            if (!empty($request->request->get('blogEditType')['blog'])) {
+                $blog->setBlog(strip_tags($request->request->get('blogEditType')['blog']));
             }
 
-            if (!empty($tagsChange)) {
-                $blog->setTags($tagsChange);
+            if (!empty($request->request->get('blogEditType')['tags'])) {
+                $blog->setTags(strip_tags($request->request->get('blogEditType')['tags']));
             }
 
-            if (!empty($image)) {
-                $blog->setUploadedFiles($image);
+            if (!empty($request->files)) {
+                $blog->setUploadedFiles($request->files);
             }
 
             $entityManager->merge($blog);
             $entityManager->flush();
-            $blogImages = $blog->getImage()->getValues();
             $images = [];
 
-            foreach ($blogImages as $image) {
+            foreach ($blog->getImage()->getValues() as $image) {
                 $images[] = $image->getName();
             }
 
             return new JsonResponse([
                 'notice' => 'success',
-                'images' => $images
+                'images' => $images,
+                'title' => $blog->getTitle(),
+                'tags' => $blog->getTags(),
+                'blog' => $blog->getBlog(),
             ]);
         }
     }
@@ -189,7 +186,6 @@ class BlogController extends Controller
 
     /**
      * @Route("{id}/deleteImage/{name}", name="BloggerBlogBundle_blog_deleteImage")
-     * @param $id
      * @param $name
      * @return JsonResponse
      */

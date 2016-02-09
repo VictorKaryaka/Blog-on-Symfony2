@@ -24,7 +24,7 @@ function editComment(commentForm, parentId) {
         success: function (data) {
             if (data.notice == 'success') {
                 $.unblockUI();
-                $('#comment-' + parentId).find('#comment').text(comment);
+                $('#comment-' + parentId).find('#comment').text(data.comment);
             }
         }
     }).always(function () {
@@ -33,13 +33,12 @@ function editComment(commentForm, parentId) {
 }
 
 function deleteComment(id) {
-
     blockUI();
     $.ajax({
         url: 'comment/delete/' + id,
-        success: function(data) {
-            $.unblockUI();
+        success: function (data) {
             if (data.notice == 'success') {
+                $.unblockUI();
                 $('#comment-' + id).find('#comment').text('This comment is deleted!');
                 $('#comment-' + id).find('#group-button').remove();
             }
@@ -133,6 +132,7 @@ $(document).ready(function () {
         if (message != '') {
             if (editMode) {
                 editComment($(this).parents('form'), Number(id.match(/\d+/)));
+                editMode = false;
             } else {
                 postComment($(this).parents('form'), Number(id.match(/\d+/)));
             }
@@ -148,7 +148,7 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '#but-edit', function () {
-        (editMode == false) ? editMode = true : editMode = false;
+        editMode = (!editMode) ? true : false;
         $('body').find('.last').remove();
         appendCommentForm($(this).parents('article'));
 
