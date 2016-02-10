@@ -48,7 +48,13 @@
                         {{ blog.comments|length }}</a>
                 </p>
 
-                <p>Posted by <span class="highlight">{{ blog.author }}</span> at {{ blog.created|date('h:iA') }}</p>
+                {% set authors = "" %}
+
+                {% for author in blog.author %}
+                    {% set authors = authors ~ author ~ ' ' %}
+                {% endfor %}
+
+                <p>Posted by <span class="highlight">{{ authors }}</span> at {{ blog.created|date('h:iA') }}</p>
 
                 <p>Tags: <span class="highlight">{{ blog.tags }}</span></p>
             </footer>

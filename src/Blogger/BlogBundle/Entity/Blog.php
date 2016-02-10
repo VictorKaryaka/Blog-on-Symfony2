@@ -31,7 +31,7 @@ class Blog
     protected $title;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="simple_array")
      * @Expose
      */
     protected $author;

@@ -27,9 +27,13 @@ class BlogController extends Controller
      */
     public function showAction($id)
     {
+        if (!$this->getUser()) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
         $entityManager = $this->getDoctrine()->getManager();
         $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneById($id);
-        $form = $this->createForm(new BlogEditType(), new Blog());
+        $form = $this->createForm(new BlogEditType($entityManager, $this->getUser()->getUsername()), new Blog());
 
         if (!$blog) {
             return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_error', ['error' => 'Blog not found!']));
@@ -51,8 +55,13 @@ class BlogController extends Controller
      */
     public function newBlogAction()
     {
+        if (!$this->getUser()) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
         if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $form = $this->createForm(new BlogType(new Image()), new Blog());
+            $entityManager = $this->getDoctrine()->getManager();
+            $form = $this->createForm(new BlogType($entityManager, $this->getUser()->getUsername()), new Blog());
 
             return ['form' => $form->createView()];
         } else {
@@ -69,14 +78,29 @@ class BlogController extends Controller
      */
     public function createBlogAction(Request $request)
     {
+        if (!$this->getUser()) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
         $blog = new Blog();
-        $form = $this->createForm(new BlogType(), $blog);
+        $entityManager = $this->getDoctrine()->getManager();
+        $form = $this->createForm(new BlogType($entityManager, $this->getUser()->getUsername()), $blog);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $username = $this->getUser()->getUsername();
-            $blog->setAuthor($username);
-            $entityManager = $this->getDoctrine()->getManager();
+            $author = [$this->getUser()->getUsername()];
+
+            if (array_key_exists('author', $request->request->get('blogType'))) {
+                $coauthors = $request->request->get('blogType')['author'];
+
+                if ($coauthors) {
+                    foreach ($coauthors as $coauthor) {
+                        $author[] = $coauthor;
+                    }
+                }
+            }
+
+            $blog->setAuthor($author);
             $entityManager->persist($blog);
             $entityManager->flush();
 
@@ -141,6 +165,12 @@ class BlogController extends Controller
 
             if (!empty($request->request->get('blogEditType')['tags'])) {
                 $blog->setTags(strip_tags($request->request->get('blogEditType')['tags']));
+            }
+
+            if (!empty($request->request->get('blogEditType')['author'])) {
+                $authors = $request->request->get('blogEditType')['author'];
+                $authors[] = $this->getUser()->getUsername();
+                $blog->setAuthor($authors);
             }
 
             if (!empty($request->files)) {

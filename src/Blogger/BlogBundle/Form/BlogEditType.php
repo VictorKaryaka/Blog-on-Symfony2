@@ -4,15 +4,37 @@ namespace Blogger\BlogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Doctrine\ORM\EntityManager;
 
 class BlogEditType extends AbstractType
 {
+    private $entityManager;
+    private $username;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager, $username)
+    {
+        $this->entityManager = $entityManager;
+        $this->username = $username;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $authors = [];
+
+        foreach ($this->entityManager->getRepository('BloggerBlogBundle:User')->findAll() as $users) {
+            if ($users->getUsername() != $this->username) {
+                $authors[$users->getUsername()] = $users->getUsername();
+            }
+        }
+
         $builder
             ->add('title', 'text', ['required' => false])
             ->add('blog', 'textarea', ['required' => false])
@@ -23,6 +45,12 @@ class BlogEditType extends AbstractType
                 'label' => 'Add image',
                 'data_class' => null,
                 'empty_data' => 0
+            ])
+            ->add('author', ChoiceType::class, [
+                'required' => false,
+                'choices' => $authors,
+                'multiple' => true,
+                'choices_as_values' => true,
             ]);
     }
 

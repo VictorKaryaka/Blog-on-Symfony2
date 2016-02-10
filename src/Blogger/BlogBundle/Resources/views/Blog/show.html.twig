@@ -24,7 +24,14 @@
             <p id="blog-tag">Tags: {{ blog.tags }}</p>
         </div>
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            {% if app.security.getToken().getUser().getUsername() == blog.author %}
+            {% set is_author = false %}
+
+            {% for authors in blog.author %}
+                {% if app.security.getToken().getUser().getUsername() == authors %}
+                    {% set is_author = true %}
+                {% endif %}
+            {% endfor %}
+            {% if is_author == true %}
                 <div align="center">
                     <input class="button-add" id="but-edit" type="button" value="Edit page">
                     <input class="button-edit" id="but-image" type="button" value="Select title image">
