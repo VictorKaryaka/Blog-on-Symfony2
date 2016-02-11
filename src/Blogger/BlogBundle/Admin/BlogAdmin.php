@@ -9,22 +9,42 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Blogger\BlogBundle\Entity\Blog;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Doctrine\ORM\EntityManager;
 
 class BlogAdmin extends Admin
 {
+    private $entityManager;
+
+    /**
+     * BlogAdmin constructor.
+     * @param $entityManager
+     */
+    public function __construct($code, $class, $baseControllerName, EntityManager $entityManager)
+    {
+        parent::__construct($code, $class, $baseControllerName);
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param FormMapper $formMapper
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $currentUser = $this->getConfigurationPool()
+            ->getContainer()
+            ->get('security.token_storage')
+            ->getToken()
+            ->getUser()
+            ->getUsername();
+
+        $authors = $this->entityManager->getRepository('BloggerBlogBundle:User')->getUsers();
+
         $formMapper->add('title', 'text')
-            ->add('author', HiddenType::class, [
-                'data' => $this->getConfigurationPool()
-                    ->getContainer()
-                    ->get('security.token_storage')
-                    ->getToken()
-                    ->getUser()
-                    ->getUsername()
+            ->add('author', 'choice', [
+                'required' => false,
+                'multiple' => true,
+                'choices' => $authors,
+                'empty_data' => [$currentUser => $currentUser]
             ])
             ->add('blog', 'textarea')
             ->add('tags', 'text')
@@ -39,7 +59,7 @@ class BlogAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper->add('title')
-            ->add('author')
+            ->add('author', 'array')
             ->add('blog')
             ->add('created')
             ->add('updated')
@@ -69,7 +89,7 @@ class BlogAdmin extends Admin
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {
-        $showMapper->add('author')
+        $showMapper->add('author', 'array')
             ->add('title')
             ->add('blog')
             ->add('created')

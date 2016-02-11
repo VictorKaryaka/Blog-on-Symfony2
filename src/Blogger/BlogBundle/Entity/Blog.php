@@ -145,7 +145,7 @@ class Blog
     /**
      * Set author
      *
-     * @param string $author
+     * @param array $author
      *
      * @return Blog
      */
@@ -159,7 +159,7 @@ class Blog
     /**
      * Get author
      *
-     * @return string
+     * @return array
      */
     public function getAuthor()
     {

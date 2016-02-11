@@ -27,13 +27,8 @@ class BlogEditType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $authors = [];
-
-        foreach ($this->entityManager->getRepository('BloggerBlogBundle:User')->findAll() as $users) {
-            if ($users->getUsername() != $this->username) {
-                $authors[$users->getUsername()] = $users->getUsername();
-            }
-        }
+        $authors = $this->entityManager->getRepository('BloggerBlogBundle:User')
+            ->getUsersWithoutCurrent($this->username);
 
         $builder
             ->add('title', 'text', ['required' => false])
