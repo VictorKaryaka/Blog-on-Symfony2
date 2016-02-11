@@ -60,10 +60,6 @@ class BlogController extends Controller
      */
     public function newBlogAction()
     {
-        if (!$this->getUser()) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         if ($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $entityManager = $this->getDoctrine()->getManager();
             $form = $this->createForm(new BlogType($entityManager, $this->getUser()->getUsername()), new Blog());
