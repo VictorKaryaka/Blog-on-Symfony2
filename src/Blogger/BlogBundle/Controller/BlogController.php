@@ -27,23 +27,28 @@ class BlogController extends Controller
      */
     public function showAction($id)
     {
-        if (!$this->getUser()) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
-
         $entityManager = $this->getDoctrine()->getManager();
         $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneById($id);
-        $form = $this->createForm(new BlogEditType($entityManager, $this->getUser()->getUsername()), new Blog());
 
         if (!$blog) {
             return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_error', ['error' => 'Blog not found!']));
+        }
+
+        if ($this->getUser()) {
+            $form = $this->createForm(new BlogEditType($entityManager, $this->getUser()->getUsername()), new Blog());
+
+            return [
+                'blog' => $blog,
+                'comments' => $entityManager
+                    ->getRepository('BloggerBlogBundle:Comment')->getSortComments($blog->getId()),
+                'form' => $form,
+            ];
         }
 
         return [
             'blog' => $blog,
             'comments' => $entityManager
                 ->getRepository('BloggerBlogBundle:Comment')->getSortComments($blog->getId()),
-            'form' => $form,
         ];
     }
 
