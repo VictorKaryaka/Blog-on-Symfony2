@@ -16,11 +16,15 @@
         <p id="comment">{{ comment.comment }}</p>
 
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            {% if comment.comment != 'This comment is deleted!' %}
+            {% if comment.comment != 'This comment is deleted!' and comment.user == app.security.getToken().getUser().getUsername() %}
                 <div id="group-button">
                     <input class="button-add" id="but-comment" type="button" value="Comment">
                     <input class="button-edit" id="but-edit" type="button" value="Edit">
                     <input class="button-delete" id="but-delete" type="button" value="Delete">
+                </div>
+             {% else %}
+                <div id="group-button">
+                    <input class="button-add" id="but-comment" type="button" value="Comment">
                 </div>
              {% endif %}
         {% endif %}

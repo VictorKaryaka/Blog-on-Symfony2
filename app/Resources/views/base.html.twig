@@ -41,8 +41,16 @@
         </div>
 
         <hgroup>
-            <h2>{% block blog_title %}<a href="{{ path('BloggerBlogBundle_homepage') }}">Welcome to blog!</a>{% endblock %}</h2>
-            <h3>{% block blog_tagline %}<a href="{{ path('BloggerBlogBundle_homepage') }}">Creating a blog with me!</a>{% endblock %}</h3>
+            {% set username = '' %}
+            {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                {% set username =  ', ' ~ app.security.getToken().getUser().getUsername() %}
+            {% endif %}
+
+            <h2>{% block blog_title %}<a href="{{ path('BloggerBlogBundle_homepage') }}">
+                        Welcome to blog!</a>{% endblock %}</h2>
+
+            <h3>{% block blog_tagline %}<a href="{{ path('BloggerBlogBundle_homepage') }}">
+                        Creating a blog with me{{ username }}!</a>{% endblock %}</h3>
         </hgroup>
     </header>
 
