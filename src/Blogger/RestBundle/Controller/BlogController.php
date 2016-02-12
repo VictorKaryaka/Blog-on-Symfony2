@@ -32,21 +32,7 @@ class BlogController extends FOSRestController
      */
     public function postBlogAction(Request $request)
     {
-        $content = json_decode($request->getContent(), true);
-        $blog = new Blog();
-        $blog->setAuthor($this->getUser()->getUsername());
-        $form = $this->createForm(new BlogType(), $blog);
-        $form->submit($content);
-
-        if ($form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($blog);
-            $entityManager->flush();
-
-            return $this->getBlogAction($blog);
-        }
-
-        return $form->getErrors();
+        return $this->updateBlog($request, null, true);
     }
 
     /**
@@ -56,20 +42,7 @@ class BlogController extends FOSRestController
      */
     public function putBlogAction(Request $request, Blog $blog)
     {
-        $content = json_decode($request->getContent(), true);
-        $entityManager = $this->getDoctrine()->getManager();
-        $blog->setAuthor($this->getUser()->getUsername());
-        $form = $this->createForm(new BlogType(), $blog);
-        $form->submit($content);
-
-        if ($form->isValid()) {
-            $entityManager->persist($blog);
-            $entityManager->flush();
-
-            return $this->getBlogAction($blog);
-        }
-
-        return $form->getErrors();
+        return $this->updateBlog($request, $blog);
     }
 
     /**
@@ -83,5 +56,52 @@ class BlogController extends FOSRestController
         $entityManager->flush();
 
         return $this->getBlogsAction();
+    }
+
+    /**
+     * @param Request $request
+     * @param Blog|null $blog
+     * @param bool|false $post
+     * @return array|\Symfony\Component\Form\FormErrorIterator
+     */
+    private function updateBlog(Request $request, Blog $blog = null, $post = false)
+    {
+        $content = json_decode($request->getContent(), true);
+        $content['title'] = strip_tags($content['title']);
+        $content['blog'] = strip_tags($content['blog']);
+        $content['tags'] = strip_tags($content['tags']);
+        $username = $this->getUser()->getUsername();
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if (empty($blog)) {
+            $blog = new Blog();
+        }
+
+        $form = $this->createForm(new BlogType($entityManager, $username), $blog);
+        $form->submit($content);
+
+        if ($form->isValid()) {
+            $authors = [$username];
+
+            if (!empty($content['author'])) {
+                foreach ($content['author'] as $author) {
+                    $authors[] = $author;
+                }
+            }
+
+            $blog->setAuthor($authors);
+
+            if ($post) {
+                $entityManager->persist($blog);
+            } else {
+                $entityManager->merge($blog);
+            }
+
+            $entityManager->flush();
+
+            return $this->getBlogAction($blog);
+        }
+
+        return $form->getErrors();
     }
 }

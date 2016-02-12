@@ -30,6 +30,7 @@ class CommentController extends FOSRestController
     public function postCommentAction(Request $request, Blog $blog)
     {
         $content = json_decode($request->getContent(), true);
+        $content['comment'] = strip_tags($content['comment']);
         $comment = new Comment();
         $comment->setBlog($blog);
         $comment->setUser($this->getUser()->getUsername());
@@ -76,7 +77,8 @@ class CommentController extends FOSRestController
     public function deleteCommentAction(Comment $comment)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($comment);
+        $comment->setComment('This comment is deleted!');
+        $entityManager->merge($comment);
         $entityManager->flush();
 
         return $this->getCommentsAction($comment->getBlog());
