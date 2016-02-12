@@ -47,6 +47,10 @@ class CommentController extends Controller
      */
     public function createAction(Request $request, $blog_id)
     {
+        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
         $response = new JsonResponse();
         $commentMessage = $request->request->get('commentType');
         $commentMessage['comment'] = strip_tags($commentMessage['comment']);
@@ -89,12 +93,14 @@ class CommentController extends Controller
     public function editCommentAction(Request $request, $blog_id)
     {
         if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $editComment = strip_tags($request->request->get('comment'));
-            $comment = $entityManager->find('BloggerBlogBundle:Comment', $blog_id);
-
-            return $this->updateComment($entityManager, $comment, $editComment);
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $editComment = strip_tags($request->request->get('comment'));
+        $comment = $entityManager->find('BloggerBlogBundle:Comment', $blog_id);
+
+        return $this->updateComment($entityManager, $comment, $editComment);
     }
 
     /**
@@ -105,11 +111,13 @@ class CommentController extends Controller
     public function deleteCommentAction($comment_id)
     {
         if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $comment = $entityManager->find('BloggerBlogBundle:Comment', $comment_id);
-
-            return $this->updateComment($entityManager, $comment, 'This comment is deleted!');
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $comment = $entityManager->find('BloggerBlogBundle:Comment', $comment_id);
+
+        return $this->updateComment($entityManager, $comment, 'This comment is deleted!');
     }
 
     /**
