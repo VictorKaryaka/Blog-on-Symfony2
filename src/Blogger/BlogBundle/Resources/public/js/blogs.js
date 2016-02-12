@@ -67,8 +67,8 @@ function editBlog(submitForm, files) {
                 $('.blog').find('.large').remove();
                 $.each(data.images, function (key, value) {
                     $('.blog').append('<img class="large"' +
-                    'src="/images/' + value + '"' +
-                    'alt="image not found">');
+                        'src="/images/' + value + '"' +
+                        'alt="image not found">');
                 });
             }
         }

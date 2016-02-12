@@ -13,8 +13,7 @@ use \Doctrine\ORM\EntityRepository;
 class BlogRepository extends EntityRepository
 {
     /**
-     * @param null $limit
-     * @return array
+     * @return \Doctrine\ORM\QueryBuilder
      */
     public function getLatestBlogs()
     {

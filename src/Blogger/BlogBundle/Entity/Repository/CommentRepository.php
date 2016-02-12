@@ -58,12 +58,12 @@ class CommentRepository extends EntityRepository
             ->select('blog.id')
             ->orderBy('blog.id')->setMaxResults(1);
 
-        $blog = $qb->getQuery()->getResult();
+        $blog = $qb->getQuery()->getSingleScalarResult();
 
         $comments = $this->createQueryBuilder('comment')
             ->select('comment.id', 'comment.comment')
             ->where('comment.blog = :blogId')
-            ->setParameter('blogId', $blog[0]['id']);
+            ->setParameter('blogId', $blog);
 
         return $comments->getQuery()->getResult();
     }

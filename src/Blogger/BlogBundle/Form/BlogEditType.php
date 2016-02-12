@@ -2,10 +2,10 @@
 
 namespace Blogger\BlogBundle\Form;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Doctrine\ORM\EntityManager;
 
 class BlogEditType extends AbstractType
 {
@@ -13,9 +13,10 @@ class BlogEditType extends AbstractType
     private $username;
 
     /**
-     * @param EntityManager $entityManager
+     * @param ObjectManager $entityManager
+     * @param $username
      */
-    public function __construct(EntityManager $entityManager, $username)
+    public function __construct(ObjectManager $entityManager, $username)
     {
         $this->entityManager = $entityManager;
         $this->username = $username;
