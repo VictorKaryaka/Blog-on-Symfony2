@@ -24,6 +24,12 @@ class BlogAdmin extends Admin
         $this->entityManager = $entityManager;
     }
 
+    protected $datagridValues = array(
+        '_page' => 1,
+        '_sort_order' => 'DESC', // sort direction
+        '_sort_by' => 'id' // field name
+    );
+
     /**
      * @param FormMapper $formMapper
      */
