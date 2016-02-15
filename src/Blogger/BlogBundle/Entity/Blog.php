@@ -90,7 +90,7 @@ class Blog
     }
 
     /**
-     * @param $uploadedFiles
+     * @param ArrayCollection $uploadedFiles
      */
     public function setUploadedFiles($uploadedFiles)
     {
@@ -104,7 +104,7 @@ class Blog
     {
         $this->comments = new ArrayCollection();
         $this->image = new ArrayCollection();
-        $this->uploadedFiles = [];
+        $this->uploadedFiles = new ArrayCollection();
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
     }

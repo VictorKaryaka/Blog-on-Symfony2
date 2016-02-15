@@ -47,24 +47,26 @@ class CommentController extends Controller
      */
     public function createAction(Request $request, $blog_id)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
-        }
+//        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+//            return $this->redirect($this->generateUrl('fos_user_security_login'));
+//        }
 
         $response = new JsonResponse();
+        $entityManager = $this->getDoctrine()->getManager();
         $commentMessage = $request->request->get('commentType');
         $commentMessage['comment'] = strip_tags($commentMessage['comment']);
         $request->request->set('commentType', $commentMessage);
         $blog = $this->getBlog($blog_id);
         $comment = new Comment();
         $username = $this->getUser()->getUsername();
+        $user = $entityManager->getRepository('BloggerBlogBundle:User')->findBy(['username' => $username])[0];
         $comment->setBlog($blog);
         $comment->setUser($username);
+        $comment->setUserId($user);
         $form = $this->createForm(new CommentType(), $comment);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
 
@@ -128,7 +130,10 @@ class CommentController extends Controller
      */
     private function updateComment(ObjectManager $entityManager, Comment $comment, $message)
     {
+        $username = $this->getUser()->getUsername();
+        $user = $entityManager->getRepository('BloggerBlogBundle:User')->findBy(['username' => $username])[0];
         $comment->setComment($message);
+        $comment->setUserId($user);
         $entityManager->merge($comment);
         $entityManager->flush();
 

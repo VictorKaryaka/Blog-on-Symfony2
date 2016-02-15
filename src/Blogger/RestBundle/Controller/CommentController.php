@@ -29,11 +29,15 @@ class CommentController extends FOSRestController
      */
     public function postCommentAction(Request $request, Blog $blog)
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $username = $this->getUser()->getUsername();
+        $user = $entityManager->getRepository('BloggerBlogBundle:User')->findBy(['username' => $username])[0];
         $content = json_decode($request->getContent(), true);
         $content['comment'] = strip_tags($content['comment']);
         $comment = new Comment();
         $comment->setBlog($blog);
         $comment->setUser($this->getUser()->getUsername());
+        $comment->setUserId($user);
         $form = $this->createForm(new CommentType(), $comment);
         $form->submit($content);
 
