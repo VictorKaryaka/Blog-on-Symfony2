@@ -59,6 +59,10 @@ class BlogController extends Controller
      */
     public function newBlogAction()
     {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
+
         $entityManager = $this->getDoctrine()->getManager();
         $form = $this->createForm(new BlogType($entityManager, $this->getUser()->getUsername()), new Blog());
 
@@ -74,7 +78,7 @@ class BlogController extends Controller
      */
     public function createBlogAction(Request $request)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
@@ -128,7 +132,7 @@ class BlogController extends Controller
      */
     public function deleteBlogAction($id)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
@@ -149,7 +153,7 @@ class BlogController extends Controller
      */
     public function updateBlogAction(Request $request, $id)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
@@ -203,7 +207,7 @@ class BlogController extends Controller
      */
     public function setTitleImageAction($id, $name)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
@@ -223,7 +227,7 @@ class BlogController extends Controller
      */
     public function deleteImageAction($name)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 

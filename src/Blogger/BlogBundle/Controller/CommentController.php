@@ -47,9 +47,9 @@ class CommentController extends Controller
      */
     public function createAction(Request $request, $blog_id)
     {
-//        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
-//            return $this->redirect($this->generateUrl('fos_user_security_login'));
-//        }
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirect($this->generateUrl('fos_user_security_login'));
+        }
 
         $response = new JsonResponse();
         $entityManager = $this->getDoctrine()->getManager();
@@ -94,7 +94,7 @@ class CommentController extends Controller
      */
     public function editCommentAction(Request $request, $blog_id)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
@@ -112,7 +112,7 @@ class CommentController extends Controller
      */
     public function deleteCommentAction($comment_id)
     {
-        if (($this->isGranted('IS_AUTHENTICATED_FULLY') || $this->isGranted('IS_AUTHENTICATED_REMEMBERED'))) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('fos_user_security_login'));
         }
 
