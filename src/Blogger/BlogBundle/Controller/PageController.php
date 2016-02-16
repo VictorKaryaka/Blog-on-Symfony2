@@ -90,7 +90,7 @@ class PageController extends Controller
         $entityManager = $this->getDoctrine()->getManager();
         $tags = $entityManager->getRepository('BloggerBlogBundle:Blog')->getTags();
         $tagWeights = $entityManager->getRepository('BloggerBlogBundle:Blog')->getTagWeights($tags);
-        $commentLimit = $entityManager->find('BloggerBlogBundle:Config', 1)->getCommentsLimit();
+        $commentLimit = $entityManager->getRepository('BloggerBlogBundle:Config')->findAll()[0]->getCommentsLimit();
         $latestComments = $entityManager->getRepository('BloggerBlogBundle:Comment')->getLatestComments($commentLimit);
 
         return [
@@ -116,7 +116,7 @@ class PageController extends Controller
         }
 
         $pagination = $paginator->paginate($blogs->getQuery(), $request->query->getInt('page', 1),
-            $entityManager->find('BloggerBlogBundle:Config', 1)->getBlogsLimit());
+            $entityManager->getRepository('BloggerBlogBundle:Config')->findAll()[0]->getBlogsLimit());
 
         return ['pagination' => $pagination];
     }
