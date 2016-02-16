@@ -106,6 +106,13 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Select2 block
+     */
+    $('#blogType_author').select2();
+    $('#blogEditType_author').select2();
+
+
     if ($('.large').length == 0) {
         $('#but-image').hide();
         $('#but-image-delete').hide();

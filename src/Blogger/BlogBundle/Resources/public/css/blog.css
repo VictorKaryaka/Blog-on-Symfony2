@@ -324,3 +324,11 @@ form.blogger ul li {
 #blogEditType_uploadedFiles {
     margin-top: 10px;
 }
+
+#blogEditType_author {
+    width: 504px;
+}
+
+#blogType_author {
+    width: 504px;
+}
