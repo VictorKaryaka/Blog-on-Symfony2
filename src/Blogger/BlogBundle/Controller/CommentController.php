@@ -48,7 +48,11 @@ class CommentController extends Controller
     public function createAction(Request $request, $blog_id)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['error' => 'Access denied']);
+            } else {
+                return $this->redirect($this->generateUrl('fos_user_security_login'));
+            }
         }
 
         $response = new JsonResponse();
@@ -95,7 +99,11 @@ class CommentController extends Controller
     public function editCommentAction(Request $request, $blog_id)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['error' => 'Access denied']);
+            } else {
+                return $this->redirect($this->generateUrl('fos_user_security_login'));
+            }
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -107,13 +115,18 @@ class CommentController extends Controller
 
     /**
      * @Route("{id}/comment/delete/{comment_id}", name = "BloggerBlogBundle_comment_delete", requirements={"comment_id": "\d+"})
+     * @param Request $request
      * @param $comment_id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function deleteCommentAction($comment_id)
+    public function deleteCommentAction(Request $request, $comment_id)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['error' => 'Access denied']);
+            } else {
+                return $this->redirect($this->generateUrl('fos_user_security_login'));
+            }
         }
 
         $entityManager = $this->getDoctrine()->getManager();

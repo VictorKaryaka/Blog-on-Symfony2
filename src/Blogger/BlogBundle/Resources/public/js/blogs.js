@@ -11,6 +11,11 @@ function setImageTitle(image) {
                 $.unblockUI();
                 image.notify("Изображение установлено на заголовок!", "success");
             }
+
+            if (data.error == 'Access denied') {
+                var path = window.location.pathname;
+                window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
+            }
         }
     }).always(function () {
         $.unblockUI();
@@ -28,6 +33,11 @@ function deleteImage(image) {
             if (data.notice == 'success') {
                 $.unblockUI();
                 image.remove();
+            }
+
+            if (data.error == 'Access denied') {
+                var path = window.location.pathname;
+                window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
             }
         }
     }).always(function () {
@@ -70,6 +80,11 @@ function editBlog(submitForm, files) {
                         'src="/images/' + value + '"' +
                         'alt="image not found">');
                 });
+            }
+
+            if (data.error == 'Access denied') {
+                var path = window.location.pathname;
+                window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
             }
         }
     }).always(function () {

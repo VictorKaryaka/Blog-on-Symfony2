@@ -127,13 +127,18 @@ class BlogController extends Controller
     /**
      * @Route("/delete/{id}", name="BloggerBlogBundle_blog_delete")
      * @Method("GET")
+     * @param Request $request
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteBlogAction($id)
+    public function deleteBlogAction(Request $request, $id)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['error' => 'Access denied']);
+            } else {
+                return $this->redirect($this->generateUrl('fos_user_security_login'));
+            }
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -154,7 +159,11 @@ class BlogController extends Controller
     public function updateBlogAction(Request $request, $id)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['error' => 'Access denied']);
+            } else {
+                return $this->redirect($this->generateUrl('fos_user_security_login'));
+            }
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -201,14 +210,19 @@ class BlogController extends Controller
 
     /**
      * @Route("{id}/setTitleImage/{name}", name="BloggerBlogBundle_blog_setTitleImage")
+     * @param Request $request
      * @param $id
      * @param $name
      * @return JsonResponse
      */
-    public function setTitleImageAction($id, $name)
+    public function setTitleImageAction(Request $request, $id, $name)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['error' => 'Access denied']);
+            } else {
+                return $this->redirect($this->generateUrl('fos_user_security_login'));
+            }
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -222,13 +236,18 @@ class BlogController extends Controller
 
     /**
      * @Route("{id}/deleteImage/{name}", name="BloggerBlogBundle_blog_deleteImage")
+     * @param Request $request
      * @param $name
      * @return JsonResponse
      */
-    public function deleteImageAction($name)
+    public function deleteImageAction(Request $request, $name)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect($this->generateUrl('fos_user_security_login'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['error' => 'Access denied']);
+            } else {
+                return $this->redirect($this->generateUrl('fos_user_security_login'));
+            }
         }
 
         $entityManager = $this->getDoctrine()->getManager();

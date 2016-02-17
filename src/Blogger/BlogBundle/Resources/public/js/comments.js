@@ -7,6 +7,12 @@ function postComment(commentForm, parentId) {
         data: {commentType: {'comment': comment, 'parentId': parentId}},
         success: function (data) {
             $.unblockUI();
+
+            if (data.error == 'Access denied') {
+                var path = window.location.pathname;
+                window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
+            }
+
             appendComment(data);
         }
     }).always(function () {
@@ -26,6 +32,11 @@ function editComment(commentForm, parentId) {
                 $.unblockUI();
                 $('#comment-' + parentId).find('#comment').text(data.comment);
             }
+
+            if (data.error == 'Access denied') {
+                var path = window.location.pathname;
+                window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
+            }
         }
     }).always(function () {
         $.unblockUI();
@@ -41,6 +52,11 @@ function deleteComment(id) {
                 $.unblockUI();
                 $('#comment-' + id).find('#comment').text('This comment is deleted!');
                 $('#comment-' + id).find('#group-button').remove();
+            }
+
+            if (data.error == 'Access denied') {
+                var path = window.location.pathname;
+                window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
             }
         }
     }).always(function () {
