@@ -332,3 +332,7 @@ form.blogger ul li {
 #blogType_author {
     width: 504px;
 }
+
+#blogType_uploadedFiles {
+    margin-top: 10px;
+}

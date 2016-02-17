@@ -24,13 +24,17 @@
             {% if blog.getImage.get(0) is not empty %}
                 {% for image in blog.getImage %}
                     {% if image.getMain == 1 %}
-                        <img src="{{ asset(['images/', image.getName]|join) }}"/>
+                        <a href="{{ path('BloggerBlogBundle_blog_show', { 'id': blog.id, 'slug': blog.slug }) }}">
+                            <img src="{{ asset(['images/', image.getName]|join) }}"/>
+                        </a>
                         {% set image_set = true %}
                     {% endif %}
                 {% endfor %}
 
                 {% if image_set == false %}
-                    <img src="{{ asset(['images/', blog.getImage.get(0).getName]|join) }}"/>
+                    <a href="{{ path('BloggerBlogBundle_blog_show', { 'id': blog.id, 'slug': blog.slug }) }}">
+                        <img src="{{ asset(['images/', blog.getImage.get(0).getName]|join) }}"/>
+                    </a>
                 {% endif %}
             {% endif %}
 

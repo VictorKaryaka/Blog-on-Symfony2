@@ -114,7 +114,8 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("{id}/comment/delete/{comment_id}", name = "BloggerBlogBundle_comment_delete", requirements={"comment_id": "\d+"})
+     * @Route("{id}/comment/delete/{comment_id}", name = "BloggerBlogBundle_comment_delete",
+     *     requirements={"comment_id": "\d+"})
      * @param Request $request
      * @param $comment_id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
