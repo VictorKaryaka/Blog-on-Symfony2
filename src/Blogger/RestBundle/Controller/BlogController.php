@@ -70,6 +70,12 @@ class BlogController extends FOSRestController
         $content['title'] = strip_tags($content['title']);
         $content['blog'] = strip_tags($content['blog']);
         $content['tags'] = strip_tags($content['tags']);
+
+        if (!empty($content['author'])) {
+            $coauthors = $content['author'];
+            unset($content['author']);
+        }
+
         $username = $this->getUser()->getUsername();
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -83,8 +89,8 @@ class BlogController extends FOSRestController
         if ($form->isValid()) {
             $authors = [$username];
 
-            if (!empty($content['author'])) {
-                foreach ($content['author'] as $author) {
+            if (!empty($coauthors)) {
+                foreach ($coauthors as $author) {
                     $authors[] = $author;
                 }
             }
