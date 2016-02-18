@@ -25,6 +25,6 @@ services:
 
     blogs.category:
         class: Blogger\BlogBundle\Admin\BlogAdmin
-        arguments: [~, Blogger\BlogBundle\Entity\Blog, ~]
+        arguments: [~, Blogger\BlogBundle\Entity\Blog, ~, @doctrine.orm.entity_manager]
         tags:
             - { name: sonata.admin, group: Blog admin, manager_type: orm, label: Blog }
