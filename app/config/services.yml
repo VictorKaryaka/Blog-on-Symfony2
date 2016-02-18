@@ -28,3 +28,6 @@ services:
         arguments: [~, Blogger\BlogBundle\Entity\Blog, ~, @doctrine.orm.entity_manager]
         tags:
             - { name: sonata.admin, group: Blog admin, manager_type: orm, label: Blog }
+
+    fos_user.doctrine_registry:
+        alias: doctrine
