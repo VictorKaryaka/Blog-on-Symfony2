@@ -19,14 +19,17 @@ class BlogController extends FOSRestController
     }
 
     /**
+     * @param Request $request
      * @return array
      */
-    public function getBlogsAction()
+    public function getBlogsAction(Request $request)
     {
+        $limit = $request->query->get('limit');
+        $startPage = $request->query->get('startPage');
         $entityManager = $this->getDoctrine()->getManager();
-        $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->findAll();
+        $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->getPaginationBlogs($limit, $startPage);
 
-        return ['blogs' => $blogs];
+        return ['blogs' => $blog];
     }
 
     /**

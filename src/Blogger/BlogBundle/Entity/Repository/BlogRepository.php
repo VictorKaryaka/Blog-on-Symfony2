@@ -26,6 +26,22 @@ class BlogRepository extends EntityRepository
     }
 
     /**
+     * @param $limit
+     * @param $startPage
+     * @return array
+     */
+    public function getPaginationBlogs($limit, $startPage)
+    {
+        $qb = $this->createQueryBuilder('blog')
+            ->where('blog.id >= :startPage')
+            ->orderBy('blog.id', 'DESC')
+            ->setParameter('startPage', $startPage)
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @return array
      */
     public function getTags()
