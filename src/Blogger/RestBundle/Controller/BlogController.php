@@ -18,6 +18,9 @@ class BlogController extends FOSRestController
         return ['blog' => $blog];
     }
 
+    /**
+     * @return array
+     */
     public function getBlogsAction()
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -32,7 +35,7 @@ class BlogController extends FOSRestController
      */
     public function postBlogAction(Request $request)
     {
-        return $this->updateBlog($request, null, true);
+        return $this->updateBlog($request, null);
     }
 
     /**
@@ -61,10 +64,9 @@ class BlogController extends FOSRestController
     /**
      * @param Request $request
      * @param Blog|null $blog
-     * @param bool|false $post
      * @return array|\Symfony\Component\Form\FormErrorIterator
      */
-    private function updateBlog(Request $request, Blog $blog = null, $post = false)
+    private function updateBlog(Request $request, Blog $blog = null)
     {
         $content = json_decode($request->getContent(), true);
         $content['title'] = strip_tags($content['title']);
@@ -97,7 +99,7 @@ class BlogController extends FOSRestController
 
             $blog->setAuthor($authors);
 
-            if ($post) {
+            if ($request->getMethod() == "POST") {
                 $entityManager->persist($blog);
             } else {
                 $entityManager->merge($blog);

@@ -145,7 +145,7 @@ class CommentController extends Controller
     private function updateComment(ObjectManager $entityManager, Comment $comment, $message)
     {
         $username = $this->getUser()->getUsername();
-        $user = $entityManager->getRepository('BloggerBlogBundle:User')->findBy(['username' => $username])[0];
+        $user = $entityManager->getRepository('BloggerBlogBundle:User')->findOneBy(['username' => $username]);
         $comment->setComment($message);
         $comment->setUserId($user);
         $entityManager->merge($comment);
