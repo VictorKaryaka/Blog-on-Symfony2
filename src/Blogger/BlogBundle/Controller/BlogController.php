@@ -257,4 +257,18 @@ class BlogController extends Controller
 
         return new JsonResponse(['notice' => 'success']);
     }
+
+    /**
+     * @Route("{id}/get/authors", name="BloggerBlogBundle_blog_getAuthors")
+     * @Method("GET")
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getAuthorAction($id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneBy(['id' => $id]);
+
+        return new JsonResponse($blog->getAuthor());
+    }
 }

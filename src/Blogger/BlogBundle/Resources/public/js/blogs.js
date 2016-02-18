@@ -92,6 +92,25 @@ function editBlog(submitForm, files) {
     });
 }
 
+function getAuthor() {
+    var path = window.location.pathname;
+    var url = path.substr(0, path.lastIndexOf('/')) + '/get/authors';
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (data) {
+            $('#blogEditType_author').val('test');
+
+            for (var i = 0; i < data.length; i++) {
+                $("#blogEditType_author [value=" + data[i] + "]").attr("selected", "selected");
+            }
+
+            $('#blogEditType_author').select2();
+        }
+    });
+}
+
 function blockUI() {
     $.blockUI({
         css: {
@@ -121,12 +140,7 @@ $(document).ready(function () {
         }
     }
 
-    /**
-     * Select2 block
-     */
     $('#blogType_author').select2();
-    $('#blogEditType_author').select2();
-
 
     if ($('.large').length == 0) {
         $('#but-image').hide();
@@ -151,6 +165,7 @@ $(document).ready(function () {
     $('#but-edit').click(function () {
         if ($('#update-blog').is(':hidden')) {
             $('#update-blog').show('slow');
+            getAuthor();
             $('#blogEditType_title').val($('#blog-title').text());
             $('#blogEditType_blog').val($('#blog-content').text());
             $('#blogEditType_tags').val($('#blog-tag').text().replace('Tags: ', ''));
