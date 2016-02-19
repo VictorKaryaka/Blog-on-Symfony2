@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Blogger\BlogBundle\Entity\Blog;
 use Blogger\BlogBundle\Form\BlogType;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 class BlogController extends FOSRestController
 {
@@ -19,13 +20,13 @@ class BlogController extends FOSRestController
     }
 
     /**
-     * @param Request $request
+     * @Get("/blogs/page/{startPage}/{limit}")
+     * @param $startPage
+     * @param $limit
      * @return array
      */
-    public function getBlogsAction(Request $request)
+    public function getBlogsAction($startPage, $limit)
     {
-        $limit = $request->query->get('limit');
-        $startPage = $request->query->get('startPage');
         $entityManager = $this->getDoctrine()->getManager();
         $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->getPaginationBlogs($limit, $startPage);
 
@@ -62,7 +63,7 @@ class BlogController extends FOSRestController
         $entityManager->remove($blog);
         $entityManager->flush();
 
-        return $this->getBlogsAction($request);
+        return $this->getBlogAction($request);
     }
 
     /**

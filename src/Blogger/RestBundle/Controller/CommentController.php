@@ -4,10 +4,10 @@ namespace Blogger\RestBundle\Controller;
 
 use Blogger\BlogBundle\Entity\Blog;
 use Blogger\BlogBundle\Entity\Comment;
-use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Blogger\BlogBundle\Form\CommentType;
+use FOS\RestBundle\Controller\Annotations\Post;
 
 class CommentController extends FOSRestController
 {
@@ -30,31 +30,19 @@ class CommentController extends FOSRestController
      */
     public function postCommentAction(Request $request, Blog $blog)
     {
-        $parentId = $request->query->get('parentId');
-        $entityManager = $this->getDoctrine()->getManager();
-        $username = $this->getUser()->getUsername();
-        $userId = $entityManager->getRepository('BloggerBlogBundle:User')->findOneBy(['username' => $username]);
-        $content = json_decode($request->getContent(), true);
-        $content['comment'] = strip_tags($content['comment']);
-        $comment = new Comment();
-        $comment->setBlog($blog);
-        $comment->setUser($this->getUser()->getUsername());
-        $comment->setUserId($userId);
-        $form = $this->createForm(new CommentType(), $comment);
-        $form->submit($content);
+        return $this->updateComment($request, $blog);
+    }
 
-        if ($form->isValid()) {
-            if ($parentId) {
-                $comment->setParentId($parentId);
-            }
-
-            $entityManager->persist($comment);
-            $entityManager->flush();
-
-            return $this->getCommentsAction($blog);
-        }
-
-        return $form->getErrors();
+    /**
+     * @Post("/comments/{blog}/{parentId}")
+     * @param Request $request
+     * @param Blog $blog
+     * @param $parentId
+     * @return array|\Symfony\Component\Form\FormErrorIterator
+     */
+    public function postCommentParentAction(Request $request, Blog $blog, $parentId)
+    {
+        return $this->updateComment($request, $blog, $parentId);
     }
 
     /**
@@ -91,5 +79,40 @@ class CommentController extends FOSRestController
         $entityManager->flush();
 
         return $this->getCommentsAction($comment->getBlog());
+    }
+
+    /**
+     * @param Request $request
+     * @param Blog $blog
+     * @param null $parentId
+     * @return array|\Symfony\Component\Form\FormErrorIterator
+     */
+    private function updateComment(Request $request, Blog $blog, $parentId = null)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $username = $this->getUser()->getUsername();
+        $userId = $entityManager->getRepository('BloggerBlogBundle:User')->findOneBy(['username' => $username]);
+        $content = json_decode($request->getContent(), true);
+        $content['comment'] = strip_tags($content['comment']);
+        $comment = new Comment();
+        $comment->setBlog($blog);
+        $comment->setUser($this->getUser()->getUsername());
+        $comment->setUserId($userId);
+        $form = $this->createForm(new CommentType(), $comment);
+        $form->submit($content);
+
+        if ($form->isValid()) {
+
+            if ($parentId) {
+                $comment->setParentId($parentId);
+            }
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->getCommentsAction($blog);
+        }
+
+        return $form->getErrors();
     }
 }
