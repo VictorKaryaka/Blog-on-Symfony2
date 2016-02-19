@@ -11,8 +11,9 @@ function setImageTitle(image) {
                 $.unblockUI();
                 image.notify("Изображение установлено на заголовок!", "success");
             }
-
-            if (data.error == 'Access denied') {
+        },
+        error: function (jqXHR) {
+            if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
             }
@@ -34,8 +35,9 @@ function deleteImage(image) {
                 $.unblockUI();
                 image.remove();
             }
-
-            if (data.error == 'Access denied') {
+        },
+        error: function () {
+            if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
             }
@@ -81,8 +83,9 @@ function editBlog(submitForm, files) {
                         'alt="image not found">');
                 });
             }
-
-            if (data.error == 'Access denied') {
+        },
+        error: function () {
+            if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
             }

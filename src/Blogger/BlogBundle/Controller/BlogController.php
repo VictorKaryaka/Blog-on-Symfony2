@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Blogger\BlogBundle\Form\BlogType;
 use Blogger\BlogBundle\Form\BlogEditType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Blog controller.
@@ -135,7 +136,7 @@ class BlogController extends Controller
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => 'Access denied']);
+                return new Response('', 403);
             } else {
                 return $this->redirect($this->generateUrl('fos_user_security_login'));
             }
@@ -160,7 +161,7 @@ class BlogController extends Controller
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => 'Access denied']);
+                return new Response('', 403);
             } else {
                 return $this->redirect($this->generateUrl('fos_user_security_login'));
             }
@@ -219,7 +220,7 @@ class BlogController extends Controller
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => 'Access denied']);
+                return new Response('', 403);
             } else {
                 return $this->redirect($this->generateUrl('fos_user_security_login'));
             }
@@ -244,7 +245,7 @@ class BlogController extends Controller
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => 'Access denied']);
+                return new Response('', 403);
             } else {
                 return $this->redirect($this->generateUrl('fos_user_security_login'));
             }

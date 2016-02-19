@@ -11,6 +11,7 @@ use Blogger\BlogBundle\Entity\Comment;
 use Blogger\BlogBundle\Form\CommentType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CommentController
@@ -49,7 +50,7 @@ class CommentController extends Controller
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => 'Access denied']);
+                return new Response('', 403);
             } else {
                 return $this->redirect($this->generateUrl('fos_user_security_login'));
             }
@@ -100,7 +101,7 @@ class CommentController extends Controller
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => 'Access denied']);
+                return new Response('', 403);
             } else {
                 return $this->redirect($this->generateUrl('fos_user_security_login'));
             }
@@ -124,7 +125,7 @@ class CommentController extends Controller
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => 'Access denied']);
+                return new Response('', 403);
             } else {
                 return $this->redirect($this->generateUrl('fos_user_security_login'));
             }
