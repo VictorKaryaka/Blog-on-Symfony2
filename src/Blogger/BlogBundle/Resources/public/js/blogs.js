@@ -36,7 +36,7 @@ function deleteImage(image) {
                 image.remove();
             }
         },
-        error: function () {
+        error: function (jqXHR) {
             if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
@@ -84,7 +84,7 @@ function editBlog(submitForm, files) {
                 });
             }
         },
-        error: function () {
+        error: function (jqXHR) {
             if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');

@@ -9,7 +9,7 @@ function postComment(commentForm, parentId) {
             $.unblockUI();
             appendComment(data);
         },
-        error: function () {
+        error: function (jqXHR) {
             if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
@@ -33,7 +33,7 @@ function editComment(commentForm, parentId) {
                 $('#comment-' + parentId).find('#comment').text(data.comment);
             }
         },
-        error: function () {
+        error: function (jqXHR) {
             if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
@@ -55,7 +55,7 @@ function deleteComment(id) {
                 $('#comment-' + id).find('#group-button').remove();
             }
         },
-        error: function () {
+        error: function (jqXHR) {
             if (403 == jqXHR.status) {
                 var path = window.location.pathname;
                 window.location.replace(path.substr(0, path.lastIndexOf('php') + 3) + '/login');
