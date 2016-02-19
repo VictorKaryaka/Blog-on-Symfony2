@@ -64,7 +64,7 @@ class BlogAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper->add('title')
-            ->add('author', 'array')
+            ->add('author')
             ->add('blog')
             ->add('created')
             ->add('updated')
@@ -94,7 +94,7 @@ class BlogAdmin extends Admin
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {
-        $showMapper->add('author', 'array')
+        $showMapper->add('author')
             ->add('title')
             ->add('blog')
             ->add('created')
