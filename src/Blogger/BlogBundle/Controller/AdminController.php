@@ -23,7 +23,7 @@ class AdminController extends CoreController
     public function settingsAction(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $config = $entityManager->find('BloggerBlogBundle:Config', 1);
+        $config = $entityManager->getRepository('BloggerBlogBundle:Config')->findAll()[0];
 
         if ($request->request->count() > 0) {
             switch (key($request->request->all())) {
