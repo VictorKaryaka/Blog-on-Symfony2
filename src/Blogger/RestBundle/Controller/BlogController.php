@@ -52,16 +52,17 @@ class BlogController extends FOSRestController
     }
 
     /**
+     * @param Request $request
      * @param Blog $blog
      * @return array
      */
-    public function deleteBlogAction(Blog $blog)
+    public function deleteBlogAction(Request $request, Blog $blog)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($blog);
         $entityManager->flush();
 
-        return $this->getBlogsAction();
+        return $this->getBlogsAction($request);
     }
 
     /**
