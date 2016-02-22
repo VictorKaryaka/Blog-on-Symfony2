@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 class BlogAdmin extends Admin
 {
     private $entityManager;
+    protected $baseRoutePattern = 'blogger/blog';
 
     /**
      * BlogAdmin constructor.
@@ -64,7 +65,7 @@ class BlogAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper->add('title')
-            ->add('author')
+            ->add('authors')
             ->add('blog')
             ->add('created')
             ->add('updated')
@@ -94,7 +95,7 @@ class BlogAdmin extends Admin
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {
-        $showMapper->add('author')
+        $showMapper->add('authors')
             ->add('title')
             ->add('blog')
             ->add('created')

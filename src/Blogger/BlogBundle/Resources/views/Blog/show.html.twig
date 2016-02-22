@@ -25,8 +25,7 @@
         </div>
         {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {% set is_author = false %}
-            {% set coauthors = blog.author|split(',') %}
-            {% for authors in coauthors %}
+            {% for authors in blog.author %}
                 {% if app.security.getToken().getUser().getUsername() == authors %}
                     {% set is_author = true %}
                 {% endif %}

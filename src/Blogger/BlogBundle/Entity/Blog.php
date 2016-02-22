@@ -163,10 +163,6 @@ class Blog
      */
     public function getAuthor()
     {
-        if ($this->author != null && is_array($this->author)) {
-            return implode(',', $this->author);
-        }
-
         return $this->author;
     }
 
@@ -406,5 +402,12 @@ class Blog
                 }
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthors() {
+        return implode(',', $this->author);
     }
 }

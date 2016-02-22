@@ -20,6 +20,14 @@ class UserAdmin extends Admin
             ->add('email', 'text')
             ->add('enabled', 'checkbox', ['required' => false])
             ->add('lastLogin', 'datetime')
+            ->add('role', 'choice', [
+                'multiple' => true,
+                'choices' => [
+                    'ROLE_ADMIN' => 'ROLE_ADMIN',
+                    'ROLE_USER' => 'ROLE_USER',
+                    'ROLE_API' => 'ROLE_API',
+                ],
+            ])
             ->add('plainPassword', 'repeated', [
                 'type' => 'password',
                 'invalid_message' => 'The password fields must match!',
@@ -46,6 +54,7 @@ class UserAdmin extends Admin
             ->add('email')
             ->add('enabled')
             ->add('lastLogin')
+            ->add('role')
             ->add('_action', 'actions', [
                 'actions' => [
                     'show' => [],

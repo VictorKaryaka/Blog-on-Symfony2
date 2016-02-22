@@ -44,4 +44,22 @@ class User extends BaseUser
     {
         $this->apiKey = $apiKey;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRole() {
+        if (!empty($this->roles)) {
+            return $this->roles[0];
+        }
+
+        return ["ROLE_USER"];
+    }
+
+    /**
+     * @param $role
+     */
+    public function setRole($role) {
+        $this->setRoles(array($role));
+    }
 }

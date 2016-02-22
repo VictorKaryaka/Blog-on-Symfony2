@@ -103,10 +103,10 @@ function getAuthor() {
         type: 'GET',
         url: url,
         success: function (data) {
-            var authors = data.split(',');
+            //var authors = data.split(',');
 
-            for (var i = 0; i < authors.length; i++) {
-                $("#blogEditType_author [value=" + authors[i] + "]").attr("selected", "selected");
+            for (var i = 0; i < data.length; i++) {
+                $("#blogEditType_author [value=" + data[i] + "]").attr("selected", "selected");
             }
 
             $('#blogEditType_author').select2();
