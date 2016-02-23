@@ -39,8 +39,8 @@ class CommentAdmin extends Admin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $commentList = [];
         $blog = $this->getRequest()->request->get($this->getUniqid())['blog'];
-        $choices = [];
 
         if ($blog) {
             $comments = $this->entityManager->getRepository('BloggerBlogBundle:Comment')->getCommentsForBlog($blog);
@@ -51,9 +51,9 @@ class CommentAdmin extends Admin
         if (!empty($comments)) {
             foreach ($comments as $comment) {
                 if (is_object($comment)) {
-                    $choices[$comment->getId()] = $comment->getComment();
+                    $commentList[$comment->getId()] = $comment->getComment();
                 } else {
-                    $choices[$comment['id']] = $comment['comment'];
+                    $commentList[$comment['id']] = $comment['comment'];
                 }
             }
         }
@@ -73,7 +73,7 @@ class CommentAdmin extends Admin
             ])
             ->add('parentId', 'choice', [
                 'required' => false,
-                'choices' => $choices,
+                'choices' => $commentList,
             ])
             ->add('created', 'datetime')
             ->add('updated', 'datetime');
