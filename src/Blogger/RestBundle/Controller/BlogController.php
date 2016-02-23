@@ -39,7 +39,7 @@ class BlogController extends FOSRestController
      */
     public function postBlogAction(Request $request)
     {
-        return $this->updateBlog($request, null);
+        return $this->updateBlog($request);
     }
 
     /**
@@ -53,17 +53,16 @@ class BlogController extends FOSRestController
     }
 
     /**
-     * @param Request $request
      * @param Blog $blog
      * @return array
      */
-    public function deleteBlogAction(Request $request, Blog $blog)
+    public function deleteBlogAction(Blog $blog)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($blog);
         $entityManager->flush();
 
-        return $this->getBlogAction($request);
+        return $this->getBlogAction($blog);
     }
 
     /**
@@ -94,7 +93,7 @@ class BlogController extends FOSRestController
         $form->submit($content);
 
         if ($form->isValid()) {
-            $authors = [$username];
+            $authors[] = $username;
 
             if (!empty($coauthors)) {
                 foreach ($coauthors as $author) {

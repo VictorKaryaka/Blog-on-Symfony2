@@ -46,14 +46,25 @@ class User extends BaseUser
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getRole() {
         if (!empty($this->roles)) {
-            return $this->roles[0];
+            return $this->roles;
         }
 
-        return ["ROLE_USER"];
+        return ['ROLE_USER'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserRoles() {
+        if (!empty($this->roles)) {
+            return implode(', ', $this->roles);
+        }
+
+        return 'ROLE_USER';
     }
 
     /**

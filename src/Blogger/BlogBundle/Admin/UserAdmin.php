@@ -54,7 +54,7 @@ class UserAdmin extends Admin
             ->add('email')
             ->add('enabled')
             ->add('lastLogin')
-            ->add('role')
+            ->add('userRoles')
             ->add('_action', 'actions', [
                 'actions' => [
                     'show' => [],
