@@ -1,4 +1,5 @@
 {% extends 'BloggerBlogBundle::layout.html.twig' %}
+
 {% block body %}
 <form action="{{ path('BloggerBlogBundle_blog_createBlog') }}" method="post" {{ form_enctype(form) }} class="blogger">
     {{ form_errors(form) }}

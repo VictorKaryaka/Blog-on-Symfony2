@@ -77,6 +77,18 @@ class Blog
     protected $image;
 
     /**
+     * @ORM\OneToMany(targetEntity="Likes", mappedBy="blog", cascade={"persist", "remove"})
+     * @Expose
+     */
+    protected $like;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Dislikes", mappedBy="blog", cascade={"persist", "remove"})
+     * @Expose
+     */
+    protected $dislike;
+
+    /**
      * @var ArrayCollection
      */
     private $uploadedFiles;
@@ -283,6 +295,38 @@ class Blog
     }
 
     /**
+     * @return mixed
+     */
+    public function getLike()
+    {
+        return $this->like;
+    }
+
+    /**
+     * @param mixed $like
+     */
+    public function setLike($like)
+    {
+        $this->like = $like;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDislike()
+    {
+        return $this->dislike;
+    }
+
+    /**
+     * @param mixed $dislike
+     */
+    public function setDislike($dislike)
+    {
+        $this->dislike = $dislike;
+    }
+
+    /**
      * @ORM\PreUpdate()
      */
     public function setUpdatedValue()
@@ -409,5 +453,53 @@ class Blog
      */
     public function getAuthors() {
         return implode(',', $this->author);
+    }
+
+    /**
+     * Add like
+     *
+     * @param Blog $like
+     *
+     * @return Blog
+     */
+    public function addLike(Blog $like)
+    {
+        $this->like[] = $like;
+
+        return $this;
+    }
+
+    /**
+     * Remove like
+     *
+     * @param Blog $like
+     */
+    public function removeLike(Blog $like)
+    {
+        $this->like->removeElement($like);
+    }
+
+    /**
+     * Add dislike
+     *
+     * @param Blog $dislike
+     *
+     * @return Blog
+     */
+    public function addDislike(Blog $dislike)
+    {
+        $this->dislike[] = $dislike;
+
+        return $this;
+    }
+
+    /**
+     * Remove dislike
+     *
+     * @param Blog $dislike
+     */
+    public function removeDislike(Blog $dislike)
+    {
+        $this->dislike->removeElement($dislike);
     }
 }

@@ -28,6 +28,8 @@ class PageController extends Controller
      * @Route("/tag/{tag}", defaults={"tag" = ""}, name = "BloggerBlogBundle_tagname")
      * @Method("GET")
      * @Template("BloggerBlogBundle:Page:index.html.twig")
+     * @param Request $request
+     * @param $tag
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tagAction(Request $request, $tag)
@@ -108,6 +110,7 @@ class PageController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $paginator = $this->get('knp_paginator');
+        $response = [];
 
         if (empty($tag)) {
             $blogs = $entityManager->getRepository('BloggerBlogBundle:Blog')->getLatestBlogs();
@@ -118,6 +121,13 @@ class PageController extends Controller
         $pagination = $paginator->paginate($blogs->getQuery(), $request->query->getInt('page', 1),
             $entityManager->getRepository('BloggerBlogBundle:Config')->findAll()[0]->getBlogsLimit());
 
-        return ['pagination' => $pagination];
+        $response['pagination'] = $pagination;
+
+        if ($this->getUser()) {
+            $profilePicture = $this->getUser()->getProfilePicturePath();
+            $response['profilePicture'] = $profilePicture;
+        }
+
+        return $response;
     }
 }

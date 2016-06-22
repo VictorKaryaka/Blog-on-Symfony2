@@ -336,3 +336,26 @@ form.blogger ul li {
 #blogType_uploadedFiles {
     margin-top: 10px;
 }
+
+.profile {
+    text-align: right;
+}
+
+.profile-username {
+    vertical-align: 12px;
+}
+
+.profile-photo {
+    margin-left: 5px;
+    width: 35px; height: 35px;
+    border-radius: 100%;
+}
+
+.like {
+    display: inline-block;
+}
+
+.count-like {
+    float: right;
+    margin: 18px 10px 5px;
+}

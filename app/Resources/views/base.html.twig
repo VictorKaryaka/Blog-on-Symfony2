@@ -21,6 +21,18 @@
 
 <section id="wrapper">
     <header id="header">
+        <ul class="profile navigation">
+            {% if is_granted("IS_AUTHENTICATED_FULLY") or is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li class="profile-username">Welcome, {{ app.security.getToken().getUser().getUsername() }}</li>
+                {% if profilePicture is defined %}
+                    {% if profilePicture is not null %}
+                        <li><img class="profile-photo" src="{{ asset(['images/profilePicture/', profilePicture]|join) }}" alt="image not found"/></li>
+                    {% else %}
+                        <li><img class="profile-photo" src="{{ asset(['images/profilePicture/user.png']|join) }}" alt="image not found"/></li>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </ul>
         <div class="top">
             {% block navigation %}
                 <nav>
@@ -64,7 +76,7 @@
 
     <div id="footer">
         {% block footer %}
-            Symfony2 blog tutorial - created by Viktor
+            Symfony2 blog tutorial - created by Viсtor
         {% endblock %}
     </div>
 </section>
@@ -74,6 +86,7 @@
     <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/jquery-2.2.0.min.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/comments.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/blogs.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/like.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/notify.min.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/blockUI.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('bundles/bloggerblog/js/select2.min.js') }}" ></script>

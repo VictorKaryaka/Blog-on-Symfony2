@@ -3,6 +3,8 @@
 namespace Blogger\BlogBundle\Controller;
 
 use Blogger\BlogBundle\Entity\Blog;
+use Blogger\BlogBundle\Entity\Dislikes;
+use Blogger\BlogBundle\Entity\Likes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -34,14 +36,26 @@ class BlogController extends Controller
             return $this->redirect($this->generateUrl('BloggerBlogBundle_blog_error', ['error' => 'Blog not found!']));
         }
 
+        $likes = $entityManager
+            ->getRepository('BloggerBlogBundle:Likes')->getNumberOfLikes($blog->getId());
+
+        $dislikes = $entityManager
+            ->getRepository('BloggerBlogBundle:Dislikes')->getNumberOfDislikes($blog->getId());
+
         if ($this->getUser()) {
-            $form = $this->createForm(new BlogEditType($entityManager, $this->getUser()->getUsername()), new Blog());
+            $form = $this->createForm(
+                new BlogEditType($entityManager, $this->getUser()->getUsername()), new Blog())->createView();
+
+            $profilePicture = $this->getUser()->getProfilePicturePath();
 
             return [
                 'blog' => $blog,
                 'comments' => $entityManager
                     ->getRepository('BloggerBlogBundle:Comment')->getSortComments($blog->getId()),
                 'form' => $form,
+                'profilePicture' => $profilePicture,
+                'likes' => $likes,
+                'dislikes' => $dislikes
             ];
         }
 
@@ -49,6 +63,8 @@ class BlogController extends Controller
             'blog' => $blog,
             'comments' => $entityManager
                 ->getRepository('BloggerBlogBundle:Comment')->getSortComments($blog->getId()),
+            'likes' => $likes,
+            'dislikes' => $dislikes
         ];
     }
 
@@ -66,8 +82,12 @@ class BlogController extends Controller
 
         $entityManager = $this->getDoctrine()->getManager();
         $form = $this->createForm(new BlogType($entityManager, $this->getUser()->getUsername()), new Blog());
+        $profilePicture = $this->getUser()->getProfilePicturePath();
 
-        return ['form' => $form->createView()];
+        return [
+            'form' => $form->createView(),
+            'profilePicture' => $profilePicture
+        ];
     }
 
     /**
@@ -271,5 +291,79 @@ class BlogController extends Controller
         $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneBy(['id' => $id]);
 
         return new JsonResponse($blog->getAuthor());
+    }
+
+    /**
+     * @Route("{id}/setLike/like", name="BloggerBlogBundle_blog_setLike")
+     * @Method("GET")
+     * @param $id
+     * @return JsonResponse
+     */
+    public function setLikeAction($id)
+    {
+        $user = $this->getUser();
+
+        if (is_null($user)) {
+            return new Response('Forbidden', 403);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneById($id);
+        $hasLike = $entityManager->getRepository('BloggerBlogBundle:Likes')->hasLike($blog->getId(), $user->getId());
+        $hasDislike = $entityManager->getRepository('BloggerBlogBundle:Dislikes')->hasDislike($blog->getId(), $user->getId());
+
+        if (!$hasLike) {
+            $likes = new Likes();
+            $likes->setBlog($blog);
+            $likes->setUserId($user);
+            $entityManager->persist($likes);
+            $entityManager->flush();
+        }
+
+        if ($hasDislike) {
+            $entityManager->getRepository('BloggerBlogBundle:Dislikes')->deleteDislike($blog->getId(), $user->getId());
+        }
+
+        return new JsonResponse([
+            'likes' => $entityManager->getRepository('BloggerBlogBundle:Likes')->getNumberOfLikes($blog->getId()),
+            'dislikes' => $entityManager->getRepository('BloggerBlogBundle:Dislikes')->getNumberOfDislikes($blog->getId())
+        ]);
+    }
+
+    /**
+     * @Route("{id}/setDislike/dislike", name="BloggerBlogBundle_blog_setDislike")
+     * @Method("GET")
+     * @param $id
+     * @return JsonResponse
+     */
+    public function setDislikeAction($id)
+    {
+        $user = $this->getUser();
+
+        if (is_null($user)) {
+            return new Response('Forbidden', 403);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $blog = $entityManager->getRepository('BloggerBlogBundle:Blog')->findOneById($id);
+        $hasDislike = $entityManager->getRepository('BloggerBlogBundle:Dislikes')->hasDislike($blog->getId(), $user->getId());
+        $hasLike = $entityManager->getRepository('BloggerBlogBundle:Likes')->hasLike($blog->getId(), $user->getId());
+
+        if (!$hasDislike) {
+            $likes = new Dislikes();
+            $likes->setBlog($blog);
+            $likes->setUserId($user);
+            $entityManager->persist($likes);
+            $entityManager->flush();
+        }
+
+        if ($hasLike) {
+            $entityManager->getRepository('BloggerBlogBundle:Likes')->deleteLike($blog->getId(), $user->getId());
+        }
+
+        return new JsonResponse([
+            'likes' => $entityManager->getRepository('BloggerBlogBundle:Likes')->getNumberOfLikes($blog->getId()),
+            'dislikes' => $entityManager->getRepository('BloggerBlogBundle:Dislikes')->getNumberOfDislikes($blog->getId())
+        ]);
     }
 }

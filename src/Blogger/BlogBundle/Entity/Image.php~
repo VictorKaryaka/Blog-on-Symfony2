@@ -19,11 +19,6 @@ class Image
      */
     protected $id;
 
-//    /**
-//     * @ORM\Column(type="integer")
-//     */
-//    protected $blog_id;
-
     /**
      * @ORM\ManyToOne(targetEntity="Blog", inversedBy="image")
      * @ORM\JoinColumn(name="blog_id", referencedColumnName="id")
@@ -32,14 +27,13 @@ class Image
 
     /**
      * @ORM\Column(type="string")
-     * @Assert\File(
-     *     maxSize = "5M",
-     *     mimeTypes = {"image/jpeg", "image/gif", "image/png", "image/tiff"},
-     *     maxSizeMessage = "The maxmimum allowed file size is 5MB.",
-     *     mimeTypesMessage = "Only the filetypes image are allowed."
-     * )
      */
     protected $name;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" = 0})
+     */
+    protected $main;
 
     /**
      * Get id
@@ -76,26 +70,42 @@ class Image
     }
 
     /**
-     * Set blogId
+     * Set blog
      *
-     * @param \Blogger\BlogBundle\Entity\Blog $blogId
+     * @param \Blogger\BlogBundle\Entity\Blog $blog
      *
      * @return Image
      */
-    public function setBlogId(\Blogger\BlogBundle\Entity\Blog $blogId = null)
+    public function setBlog(Blog $blog = null)
     {
-        $this->blog_id = $blogId;
+        $this->blog = $blog;
 
         return $this;
     }
 
     /**
-     * Get blogId
+     * Get blog
      *
      * @return \Blogger\BlogBundle\Entity\Blog
      */
-    public function getBlogId()
+    public function getBlog()
     {
-        return $this->blog_id;
+        return $this->blog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMain()
+    {
+        return $this->main;
+    }
+
+    /**
+     * @param mixed $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
     }
 }

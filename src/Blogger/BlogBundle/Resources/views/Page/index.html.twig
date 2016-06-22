@@ -1,14 +1,12 @@
 {% extends 'BloggerBlogBundle::layout.html.twig' %}
 
 {% block body %}
-
     <div align="center" class="navigation">
         {{ knp_pagination_render(pagination) }}
     </div>
 
     {% for blog in pagination %}
         <article class="blog">
-
             <div class="date">
                 <time datetime="{{ blog.created|date('c') }}">{{ blog.created|date('l, F j, Y') }}</time>
             </div>

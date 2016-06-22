@@ -1,7 +1,7 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% trans_default_domain 'FOSUserBundle' %}
-{{form_start(form, {'method': 'POST', 'attr':{'class': 'register'}})}}
+{{form_start(form, {'method': 'POST', 'attr':{'class': 'register', 'id':'registration'}})}}
 <div class="row">
     <div class="input-field col s12">
         <label class="register-label">Login</label>
@@ -30,9 +30,10 @@
     </div>
     {{ form_errors(form.plainPassword.second) }}
 </div>
+{{ form_end(form) }}
+
 <div align="center" class="button-wrap">
-    <button class="btn-large waves-effect waves-light" type="submit" name="action">
+    <button class="btn-large waves-effect waves-light" type="submit" name="action" form="registration">
         <i class="material-icons">Registration</i>
     </button>
 </div>
-{{ form_end(form) }}

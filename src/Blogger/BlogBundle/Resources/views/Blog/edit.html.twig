@@ -1,7 +1,7 @@
 {% block body %}
+
     <form id="update-blog" action="{{ path('BloggerBlogBundle_blog_edit', {'id': id}) }}" method="post" {{ form_enctype(form) }} class="blogger" hidden>
         {{ form_errors(form) }}
-
         {{ form_row(form.title) }}
         {{ form_row(form.author) }}
         {{ form_row(form.blog) }}

@@ -4,12 +4,16 @@ namespace Blogger\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Blogger\BlogBundle\Entity\Comment;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
+ * @ORM\Entity
  * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\BlogRepository")
  * @ORM\Table(name="blog")
  * @ORM\HasLifecycleCallbacks
+ *
+ * @ExclusionPolicy("all")
  */
 class Blog
 {
@@ -22,36 +26,42 @@ class Blog
 
     /**
      * @ORM\Column(type="string")
+     * @Expose
      */
     protected $title;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="simple_array")
+     * @Expose
      */
     protected $author;
 
     /**
      * @ORM\Column(type="text")
+     * @Expose
      */
     protected $blog;
 
     /**
-     * @ORM\Column(type="text")`
+     * @ORM\Column(type="text")
+     * @Expose
      */
     protected $tags;
 
     /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog")
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="blog", cascade={"remove"})
      */
     protected $comments;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     protected $created;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     protected $updated;
 
@@ -61,9 +71,43 @@ class Blog
     protected $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="blog")
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="blog", cascade={"persist", "remove"})
+     * @Expose
      */
     protected $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Likes", mappedBy="blog", cascade={"persist", "remove"})
+     * @Expose
+     */
+    protected $like;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Dislikes", mappedBy="blog", cascade={"persist", "remove"})
+     * @Expose
+     */
+    protected $dislike;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $uploadedFiles;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getUploadedFiles()
+    {
+        return $this->uploadedFiles;
+    }
+
+    /**
+     * @param ArrayCollection $uploadedFiles
+     */
+    public function setUploadedFiles($uploadedFiles)
+    {
+        $this->uploadedFiles = $uploadedFiles;
+    }
 
     /**
      * Blog constructor.
@@ -72,6 +116,7 @@ class Blog
     {
         $this->comments = new ArrayCollection();
         $this->image = new ArrayCollection();
+        $this->uploadedFiles = new ArrayCollection();
         $this->setCreated(new \DateTime());
         $this->setUpdated(new \DateTime());
     }
@@ -112,7 +157,7 @@ class Blog
     /**
      * Set author
      *
-     * @param string $author
+     * @param array $author
      *
      * @return Blog
      */
@@ -126,7 +171,7 @@ class Blog
     /**
      * Get author
      *
-     * @return string
+     * @return array
      */
     public function getAuthor()
     {
@@ -250,7 +295,39 @@ class Blog
     }
 
     /**
-     * @ORM\PreUpdate
+     * @return mixed
+     */
+    public function getLike()
+    {
+        return $this->like;
+    }
+
+    /**
+     * @param mixed $like
+     */
+    public function setLike($like)
+    {
+        $this->like = $like;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDislike()
+    {
+        return $this->dislike;
+    }
+
+    /**
+     * @param mixed $dislike
+     */
+    public function setDislike($dislike)
+    {
+        $this->dislike = $dislike;
+    }
+
+    /**
+     * @ORM\PreUpdate()
      */
     public function setUpdatedValue()
     {
@@ -316,11 +393,11 @@ class Blog
     /**
      * Add image
      *
-     * @param \Blogger\BlogBundle\Entity\Image $image
+     * @param Image $image
      *
      * @return Blog
      */
-    public function addImage(\Blogger\BlogBundle\Entity\Image $image)
+    public function addImage(Image $image)
     {
         $this->image[] = $image;
 
@@ -332,7 +409,7 @@ class Blog
      *
      * @param \Blogger\BlogBundle\Entity\Image $image
      */
-    public function removeImage(\Blogger\BlogBundle\Entity\Image $image)
+    public function removeImage(Image $image)
     {
         $this->image->removeElement($image);
     }
@@ -345,5 +422,84 @@ class Blog
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @ORM\PreFlush()
+     */
+    public function upload()
+    {
+        if (!$this->uploadedFiles == null) {
+            foreach ($this->uploadedFiles as $uploadedFile) {
+
+                if (is_object($uploadedFile)) {
+                    $image = new Image();
+                    $imageName = md5(uniqid()) . $uploadedFile->getClientOriginalName();
+                    $image->setName($imageName);
+                    $image->setMain(0);
+                    $imageDir = __DIR__ . '/../../../../web/images';
+                    $uploadedFile->move($imageDir, $imageName);
+                    $this->getImage()->add($image);
+                    $image->setBlog($this);
+
+                    unset($uploadedFile);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthors() {
+        return implode(',', $this->author);
+    }
+
+    /**
+     * Add like
+     *
+     * @param \Blogger\BlogBundle\Entity\Likes $like
+     *
+     * @return Blog
+     */
+    public function addLike(\Blogger\BlogBundle\Entity\Likes $like)
+    {
+        $this->like[] = $like;
+
+        return $this;
+    }
+
+    /**
+     * Remove like
+     *
+     * @param \Blogger\BlogBundle\Entity\Likes $like
+     */
+    public function removeLike(\Blogger\BlogBundle\Entity\Likes $like)
+    {
+        $this->like->removeElement($like);
+    }
+
+    /**
+     * Add dislike
+     *
+     * @param \Blogger\BlogBundle\Entity\Dislike $dislike
+     *
+     * @return Blog
+     */
+    public function addDislike(\Blogger\BlogBundle\Entity\Dislike $dislike)
+    {
+        $this->dislike[] = $dislike;
+
+        return $this;
+    }
+
+    /**
+     * Remove dislike
+     *
+     * @param \Blogger\BlogBundle\Entity\Dislike $dislike
+     */
+    public function removeDislike(\Blogger\BlogBundle\Entity\Dislike $dislike)
+    {
+        $this->dislike->removeElement($dislike);
     }
 }

@@ -40,9 +40,21 @@
                                onclick="return window.confirm('Do you want delete blog?')">
                     </a>
                 </div>
-                {% include 'BloggerBlogBundle:Blog:edit.html.twig' with { 'form': form } %}
+
+                {% include 'BloggerBlogBundle:Blog:edit.html.twig' with { 'form': form, 'id': blog.id} %}
             {% endif %}
         {% endif %}
+
+        <div class="like" id="like">
+            <img class="large" src="{{ asset(['images/icons/', 'like.png']|join) }}" alt="image not found" width="30"
+                 height="50"/>
+            <label id="count-like" class="count-like">{{ likes }}</label>
+        </div>
+        <div class="like" id="dislike">
+            <img class="large img-like" src="{{ asset(['images/icons/', 'dislike.png']|join) }}" alt="image not found" width="30"
+                 height="50"/>
+            <label id="count-dislike" class="count-like">{{ dislikes }}</label>
+        </div>
 
         <section class="previous-comments">
             <h3>Comments</h3>

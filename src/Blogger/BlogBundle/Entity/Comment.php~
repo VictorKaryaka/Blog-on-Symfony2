@@ -5,12 +5,15 @@ namespace Blogger\BlogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Blogger\BlogBundle\Entity\Blog;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity(repositoryClass="Blogger\BlogBundle\Entity\Repository\CommentRepository")
  * @ORM\Table(name="comment")
  * @ORM\HasLifecycleCallbacks
+ *
+ * @ExclusionPolicy("all")
  */
 class Comment
 {
@@ -18,16 +21,25 @@ class Comment
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $userId;
+
+    /**
      * @ORM\Column(type="string")
+     * @Expose
      */
     protected $user;
 
     /**
      * @ORM\Column(type="text")
+     * @Expose
      */
     protected $comment;
 
@@ -44,6 +56,7 @@ class Comment
 
     /**
      * @ORM\Column(type="datetime")
+     * @Expose
      */
     protected $created;
 
@@ -51,6 +64,12 @@ class Comment
      * @ORM\Column(type="datetime")
      */
     protected $updated;
+
+    /**
+     * @ORM\Column(type="integer", name="parent_id", nullable=true)
+     * @Expose
+     */
+    protected $parentId;
 
     public function __construct()
     {
@@ -60,7 +79,7 @@ class Comment
     }
 
     /**
-     * @ORM\preUpdate
+     * @ORM\PreUpdate
      */
     public function setUpdatedValue()
     {
@@ -75,6 +94,22 @@ class Comment
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param mixed $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
     }
 
     /**
@@ -204,7 +239,7 @@ class Comment
      *
      * @return Comment
      */
-    public function setBlog(Blog $blog = null)
+    public function setBlog(Blog $blog)
     {
         $this->blog = $blog;
 
@@ -219,6 +254,22 @@ class Comment
     public function getBlog()
     {
         return $this->blog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @param mixed $parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
     }
 
     public static function loadValidatorMetadata(ClassMetadata $metadata)

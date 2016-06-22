@@ -8,6 +8,8 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    image_path:  "/../../../../web/images"
+    profile_picture_path: "/../../../../web/images/profilePicture"
 
 framework:
     #esi:             ~
@@ -79,6 +81,9 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Blogger\BlogBundle\Entity\User
+    registration:
+        form:
+            type: blogger_blog_registration
 
 sensio_framework_extra:
     view:
@@ -91,7 +96,7 @@ jms_serializer:
 fos_rest:
     disable_csrf_role: ROLE_API
     view:
-        view_response_listener: 'force'
+        view_response_listener: true
         formats:
             json: true
         templating_formats:
@@ -137,3 +142,6 @@ knp_menu:
     templating: false
     # the renderer to use, list is also available by default
     default_renderer: twig
+
+gregwar_captcha: ~
+

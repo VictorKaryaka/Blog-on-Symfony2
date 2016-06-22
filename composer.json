@@ -33,7 +33,8 @@
         "uecode/api-key-bundle": "dev-master",
         "sonata-project/admin-bundle": "dev-master",
         "sonata-project/doctrine-orm-admin-bundle": "2.3.*",
-        "knplabs/knp-paginator-bundle": "^2.5"
+        "knplabs/knp-paginator-bundle": "^2.5",
+        "gregwar/captcha-bundle": "^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
